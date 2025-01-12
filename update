@@ -21,6 +21,9 @@ rsync -a --delete ~/.config/nvim/ "$SCRIPT_DIR"/nvim
 # Copy the tmux config to /tmux
 rsync -a --delete ~/.config/tmux/ "$SCRIPT_DIR"/tmux
 
+# Copy the global .gitignore file
+cp ~/.config/git/ignore "$SCRIPT_DIR"/git/ignore
+
 # Remove git files from the catpuccin plugin inside tmux
 rm -rf tmux/plugins/catppuccin/tmux/.git
 rm -rf tmux/plugins/catppuccin/tmux/.github
