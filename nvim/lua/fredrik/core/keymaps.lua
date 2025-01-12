@@ -206,3 +206,9 @@ vim.keymap.set(
     "oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf(\"%w\", err)<Esc>F\"hhi",
     { desc = "Insert if err != nil with wrapped return err" }
 )
+
+-- Rebind <C-o> since some plugin removes it
+vim.keymap.set('i', '<C-o>', '<C-o>', { noremap = true, silent = true })
+
+-- <C-d> deletes a character to the right in insert mode (like <Del>)
+vim.keymap.set('i', '<C-d>', '<C-o>x', { noremap = true, silent = true })

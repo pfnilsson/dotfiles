@@ -9,6 +9,15 @@ return {
         local builtin = require("telescope.builtin")
         local nvim_tree_api = require("nvim-tree.api")
 
+        -- cache whether we are in a git repo or not
+        local git_cache = nil
+
+        -- Run asynchronously on startu
+        vim.defer_fn(function()
+            local result = vim.fn.systemlist('git rev-parse --is-inside-work-tree 2> /dev/null')
+            git_cache = result[1] == 'true'
+        end, 0)
+
         local function close_all_git_clean_buffers()
             -- Get the list of files with uncommitted changes as full paths
             local git_status_output = vim.fn.system("git status -s | awk '{print $2}' | xargs realpath")
@@ -85,13 +94,8 @@ return {
             },
         })
 
-        local function is_git_repo()
-            local result = vim.fn.systemlist('git rev-parse --is-inside-work-tree 2> /dev/null')
-            return result[1] == 'true'
-        end
-
         local function find_files_or_git_files()
-            if is_git_repo() then
+            if git_cache == true then
                 builtin.git_files()
             else
                 builtin.find_files()

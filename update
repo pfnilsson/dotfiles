@@ -29,6 +29,9 @@ rm -rf tmux/plugins/catppuccin/tmux/.git
 rm -rf tmux/plugins/catppuccin/tmux/.github
 rm -f tmux/plugins/catppuccin/tmux/.gitignore
 
+# Get commit message from the first argument, otherwise use default
+COMMIT_MESSAGE=${1:-"updated from script"}
+
 # Push to github
 git add .
 git commit -m "updated from script"
