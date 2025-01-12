@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Set directory of this file to SCRIPT_DIR 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Copy the tmuxrun script to /scripts
+cp ~/.local/bin/tmuxrun "$SCRIPT_DIR"/scripts/tmuxrun
+
+# Copy the ghostty config to /ghostty
+cp ~/.config/ghostty/config "$SCRIPT_DIR"/ghostty/config
+
+# Copy the karabiner elements config to /karabiner
+cp ~/.config/karabiner/karabiner.json "$SCRIPT_DIR"/karabiner/karabiner.json
+
+# Copy .zshrc to /scripts
+cp ~/.zshrc "$SCRIPT_DIR"/scripts/.zshrc
+
+# Copy the neovim config to /nvim
+rsync -a --delete ~/.config/nvim/ "$SCRIPT_DIR"/nvim
+
+# Copy the tmux config to /tmux
+rsync -a --delete ~/.config/tmux/ "$SCRIPT_DIR"/tmux
+
+# Remove git files from the catpuccin plugin inside tmux
+rm -rf tmux/plugins/catppuccin/tmux/.git
+rm -rf tmux/plugins/catppuccin/tmux/.github
+rm -f tmux/plugins/catppuccin/tmux/.gitignore
+
+# Push to github
+git add .
+git commit -m "updated from script"
+git push
