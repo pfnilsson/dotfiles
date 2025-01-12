@@ -139,15 +139,19 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- Paste over highlight without losing current clipboard value
-vim.keymap.set("x", "<leader>p", [["_dP]])
-
 -- <leader>d delete into void registry
 vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d")
 
--- <leader>+y/Y to yank to system clipboard
+-- <leader>y/Y to yank to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+y$]])
+
+-- <leader>p/P to paste from system clipboard
+vim.keymap.set("n", "<leader>p", [["+p]])
+vim.keymap.set("n", "<leader>P", '"+]p')
+
+-- Paste over highlight without losing current clipboard value
+vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- Remap Y to y$
 vim.keymap.set("n", "Y", "y$", { noremap = true, silent = true })

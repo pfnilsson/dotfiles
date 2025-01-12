@@ -80,6 +80,7 @@ return {
                     },
                     i = {
                         ["<CR>"] = select_and_close_nvim_tree,
+                        ["<esc>"] = actions.close,
                     }
                 },
             },
@@ -103,7 +104,7 @@ return {
         end
 
         local function live_grep_git_or_all()
-            if is_git_repo() then
+            if git_cache == true then
                 -- Inside a Git repository: Search only Git-tracked files
                 builtin.live_grep({
                     -- Use git's built-in file listing with '--iglob' to limit search scope
