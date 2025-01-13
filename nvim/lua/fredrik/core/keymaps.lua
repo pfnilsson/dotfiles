@@ -72,10 +72,18 @@ vim.keymap.set("n", "<leader>ld", ":Telescope diagnostics<CR>", { desc = "List d
 
 
 -- View open buffers with Telescope
+local function open_buffers_filter_copilot()
+    require('telescope.builtin').buffers({
+        sort_mru = true,
+        sort_lastused = true,
+        initial_mode = "normal",
+        file_ignore_patterns = { "^copilot%-chat$" }, -- Exclude 'copilot-chat' buffer
+    })
+end
 vim.keymap.set(
     "n",
     "<leader>h",
-    "<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal<cr>",
+    open_buffers_filter_copilot,
     { desc = "[P] Open Telescope buffers" }
 )
 
@@ -221,9 +229,14 @@ vim.keymap.set('i', '<C-d>', '<C-o>x', { noremap = true, silent = true })
 -- Disable arrows & delete
 local keys_to_disable = { "<Up>", "<Down>", "<Left>", "<Right>", "<Del>" }
 local modes = { "n", "i", "v", "t" }
-local opts = { noremap = true, silent = true }
 for _, mode in ipairs(modes) do
     for _, key in ipairs(keys_to_disable) do
-        vim.keymap.set(mode, key, "<Nop>", opts)
+        vim.keymap.set(mode, key, "<Nop>", { noremap = true, silent = true })
     end
 end
+
+-- Escape removes search highlighting in normal mode
+vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
+
+-- <leader>cc to toggle copilot chat
+vim.keymap.set("n", "<leader>cc", ":CopilotChatToggle<CR>", { desc = "Toggle Copilot Chat" })
