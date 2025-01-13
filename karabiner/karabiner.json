@@ -1011,7 +1011,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "equal_sign",
+                                    "key_code": "hyphen",
                                     "modifiers": {
                                         "mandatory": ["control"],
                                         "optional": ["any"]
@@ -1019,7 +1019,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "equal_sign",
+                                        "key_code": "hyphen",
                                         "modifiers": ["left_command"]
                                     }
                                 ],
@@ -1068,7 +1068,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "hyphen",
+                                    "key_code": "slash",
                                     "modifiers": {
                                         "mandatory": ["control"],
                                         "optional": ["any"]
@@ -1076,7 +1076,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "hyphen",
+                                        "key_code": "slash",
                                         "modifiers": ["left_command"]
                                     }
                                 ],
@@ -2627,6 +2627,12 @@
             ],
             "name": "Default profile",
             "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "escape" },
+                    "to": [{ "key_code": "vk_none" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "iso" }
         }
     ]

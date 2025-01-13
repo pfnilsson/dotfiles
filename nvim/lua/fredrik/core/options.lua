@@ -18,7 +18,7 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- Leave atleast 3 lines above/below cursor
-vim.opt.scrolloff = 3
+vim.opt.scrolloff = 5
 
 -- no line wrapping
 vim.opt.wrap = false

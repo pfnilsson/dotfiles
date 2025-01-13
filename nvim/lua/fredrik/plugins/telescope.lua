@@ -12,7 +12,7 @@ return {
         -- cache whether we are in a git repo or not
         local git_cache = nil
 
-        -- Run asynchronously on startu
+        -- Run asynchronously on startup
         vim.defer_fn(function()
             local result = vim.fn.systemlist('git rev-parse --is-inside-work-tree 2> /dev/null')
             git_cache = result[1] == 'true'
@@ -81,6 +81,10 @@ return {
                     i = {
                         ["<CR>"] = select_and_close_nvim_tree,
                         ["<esc>"] = actions.close,
+                        ["<C-j>"] = actions.move_selection_next,
+                        ["<C-k>"] = actions.move_selection_previous,
+                        ["<Up>"] = function() end,
+                        ["<Down>"] = function() end
                     }
                 },
             },
