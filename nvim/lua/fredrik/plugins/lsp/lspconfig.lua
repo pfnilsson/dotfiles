@@ -144,6 +144,14 @@ return {
                         pyright = {
                             disableOrganizeImports = true, -- Using Ruff's import organizer
                         },
+                        python = {
+                            analysis = {
+                                autoSearchPaths = true,
+                                diagnosticMode = "workspace",
+                                useLibraryCodeForTypes = true,
+                                typeCheckingMode = "basic",
+                            },
+                        },
                     },
                 })
             end,
