@@ -2,20 +2,15 @@ return {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
+    dependencies = {
+        "zbirenbaum/copilot-cmp", -- Ensure copilot-cmp is a dependency
+    },
     config = function()
         require("copilot").setup({
             suggestion = {
-                enabled = true,
-                auto_trigger = true,
+                enabled = false,      -- Disable built-in suggestions
+                auto_trigger = false, -- Disable auto-trigger to use copilot-cmp
                 debounce = 75,
-                keymap = {
-                    accept = "<C-J>",
-                    accept_word = false,
-                    accept_line = false,
-                    next = "<C-N>",
-                    prev = "<C-P>",
-                    dismiss = "<C-E>",
-                },
             },
             filetypes = {
                 help = false,

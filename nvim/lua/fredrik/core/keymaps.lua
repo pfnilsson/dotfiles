@@ -78,7 +78,7 @@ local function open_buffers_filter_copilot()
 end
 vim.keymap.set(
     "n",
-    "<leader>h",
+    "<leader>b",
     open_buffers_filter_copilot,
     { desc = "[P] Open Telescope buffers" }
 )

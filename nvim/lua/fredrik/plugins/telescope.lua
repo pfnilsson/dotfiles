@@ -146,6 +146,7 @@ return {
         end
         vim.keymap.set("n", "<leader>ff", find_files_or_git_files, { desc = "Find Files (Git preferred)" })
         vim.keymap.set("n", "<leader>fg", live_grep_git_or_all, { desc = "Live Grep (Git preferred)" })
+        vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Git Status" })
         vim.keymap.set("n", "<leader>fF", builtin.find_files, { desc = "Find Files (All)" })
         vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help Tags" })
         vim.keymap.set('n', '<leader>fG', builtin.live_grep, { desc = "Live Grep (All)" })
