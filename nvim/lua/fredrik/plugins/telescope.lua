@@ -149,5 +149,8 @@ return {
         vim.keymap.set("n", "<leader>fF", builtin.find_files, { desc = "Find Files (All)" })
         vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help Tags" })
         vim.keymap.set('n', '<leader>fG', builtin.live_grep, { desc = "Live Grep (All)" })
+        vim.keymap.set("n", "<leader>ld", function() builtin.diagnostics({ bufnr = 0 }) end,
+            { desc = "List diagnostics in current buffer" })
+        vim.keymap.set("n", "<leader>lD", builtin.diagnostics, { desc = "List all diagnostics" })
     end
 }

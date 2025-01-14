@@ -67,10 +67,6 @@ vim.keymap.set("n", "åi", function()
     vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to next information" })
 
--- List all diagnostics via Telescope
-vim.keymap.set("n", "<leader>ld", ":Telescope diagnostics<CR>", { desc = "List diagnostics" })
-
-
 -- View open buffers with Telescope
 local function open_buffers_filter_copilot()
     require('telescope.builtin').buffers({
