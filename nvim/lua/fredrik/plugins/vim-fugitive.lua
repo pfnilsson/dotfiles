@@ -17,5 +17,6 @@ return {
         vim.keymap.set("n", "gl", "<cmd>diffget //3<CR>", { desc = "Choose right version" })
         vim.keymap.set("n", "<leader>G", toggle_git_fugitive, { desc = "Toggle Fugitive" })
         vim.keymap.set({ "n", "v" }, "<leader>gw", ":GBrowse<CR>", { desc = "Open GitHub in browser" })
+        vim.keymap.set("n", "<leader>gB", ":G blame<CR>", { desc = "Git blame" })
     end
 }
