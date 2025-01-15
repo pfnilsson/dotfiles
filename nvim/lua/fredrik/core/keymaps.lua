@@ -236,3 +236,9 @@ vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true 
 
 -- <leader>cc to toggle copilot chat
 vim.keymap.set("n", "<leader>cc", ":CopilotChatToggle<CR>", { desc = "Toggle Copilot Chat" })
+
+-- set alt_gr/right_option + the key left of backspace to toggle alternate buffer
+vim.keymap.set('n', '´', ':b#<CR>', { noremap = true, silent = true })
+
+-- Toggle treesitter context
+vim.keymap.set('n', '<leader>ts', ':TSContextToggle<CR>')
