@@ -8,8 +8,7 @@ return {
     opts = {
         -- Define your formatters
         formatters_by_ft = {
-            python = { "black" },
+            python = { "isort", "black" },
         },
     },
 }
-
