@@ -136,25 +136,6 @@ return {
                 })
             end,
 
-            -- Handler for Pyright with Ruff integration
-            ["pyright"] = function()
-                lspconfig["pyright"].setup({
-                    capabilities = capabilities,
-                    settings = {
-                        pyright = {
-                            disableOrganizeImports = true, -- Using Ruff's import organizer
-                        },
-                        python = {
-                            analysis = {
-                                autoSearchPaths = true,
-                                diagnosticMode = "workspace",
-                                useLibraryCodeForTypes = true,
-                                typeCheckingMode = "basic",
-                            },
-                        },
-                    },
-                })
-            end,
 
             ["ruff"] = function()
                 local blackLineLen = get_black_line_length()
@@ -163,10 +144,33 @@ return {
                 if blackLineLen ~= nil then
                     settings.lineLength = blackLineLen
                 end
-
                 lspconfig["ruff"].setup({
                     capabilities = capabilities,
                     init_options = { settings = settings },
+                })
+            end,
+
+            -- Handler for basedpyright with Ruff integration
+            ["basedpyright"] = function()
+                lspconfig["basedpyright"].setup({
+                    capabilities = capabilities,
+                    settings = {
+                        basedpyright = {
+                            disableOrganizeImports = true,
+                            analysis = {
+                                typeCheckingMode = "standard",
+                                autoSearchPaths = true,
+                                useLibraryCodeForTypes = true,
+                                diagnosticsMode = "openFilesOnly",
+                                autoImportCompletions = true,
+                                diagnosticSeverityOverrides = {
+                                    autoSearchPaths = true,
+                                    enableTypeIgnoreComments = false,
+                                    reportPossiblyUnboundVariable = false,
+                                }
+                            }
+                        },
+                    }
                 })
             end,
         })

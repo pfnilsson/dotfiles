@@ -29,7 +29,7 @@ return {
             ensure_installed = {
                 "html",
                 "lua_ls",
-                "pyright",
+                "basedpyright",
                 "gopls",
                 "rust_analyzer",
                 "ruff",

@@ -104,7 +104,7 @@ vim.keymap.set({ 'n', 'v', 'o' }, '"', '^', { noremap = true, silent = true })
 -- Remap ~ to § to use the same key as US keyboard
 vim.keymap.set('n', '§', '~', { noremap = true, silent = true })
 
--- Fix all & Organize imports
+-- Fix all with <leaer>cf
 local function fixAll()
     vim.lsp.buf.code_action({
         context = { only = { "source.fixAll" } },
@@ -112,8 +112,9 @@ local function fixAll()
         async = false,
     })
 end
-vim.keymap.set("n", "<leader>lf", fixAll, { desc = "Fix All" })
+vim.keymap.set("n", "<leader>cf", fixAll, { desc = "Fix All" })
 
+-- Organize imports with <leader>co
 local function organizeImports()
     vim.lsp.buf.code_action({
         context = { only = { "source.organizeImports" } },
@@ -121,10 +122,13 @@ local function organizeImports()
         async = false,
     })
 end
-vim.keymap.set("n", "<leader>lo", organizeImports, { desc = "Organize Imports" })
+vim.keymap.set("n", "<leader>co", organizeImports, { desc = "Organize Imports" })
+
+-- LSP rename with <leader>cr
+vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "LSP Rename" })
 
 -- See available code actions
-vim.keymap.set({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, { desc = "See available code actions" })
+vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "See available code actions" })
 
 -- Unbind F1
 vim.keymap.set("n", "<F1>", "<nop>", { noremap = true, silent = true })
