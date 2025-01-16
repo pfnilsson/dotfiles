@@ -1,32 +1,3 @@
-local function get_black_line_length()
-    local filepath = "pyproject.toml"
-    local file = io.open(filepath, "r")
-    if not file then
-        return nil -- pyproject.toml not found
-    end
-
-    local found_black_section = false
-    for line in file:lines() do
-        if line == "[tool.black]" then
-            found_black_section = true
-        elseif found_black_section then
-            -- Stop if we encounter a new section
-            if string.match(line, "^%[.-%]") then
-                break
-            end
-
-            -- Check for "line-length" and extract the value
-            if string.match(line, "^%s*line%-length%s*=") then
-                file:close()
-                return tonumber(string.match(line, "= *(%d+)$"))
-            end
-        end
-    end
-
-    file:close()
-    return nil -- "line-length" not found in [tool.black]
-end
-
 return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -133,20 +104,6 @@ return {
                             },
                         },
                     },
-                })
-            end,
-
-
-            ["ruff"] = function()
-                local blackLineLen = get_black_line_length()
-                local settings = { fixAll = true }
-
-                if blackLineLen ~= nil then
-                    settings.lineLength = blackLineLen
-                end
-                lspconfig["ruff"].setup({
-                    capabilities = capabilities,
-                    init_options = { settings = settings },
                 })
             end,
 

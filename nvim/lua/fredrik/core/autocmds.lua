@@ -11,7 +11,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             return
         end
 
+        local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
         for _, client in ipairs(clients) do
+            if client.name == "ruff" and filetype == "python" and vim.fn.executable("black") == 1 then
+                require("conform").format({ bufnr = bufnr, timeout_ms = 2000 })
+                break
+            end
+
             if client.supports_method("textDocument/formatting") then
                 vim.lsp.buf.format({
                     bufnr = bufnr,

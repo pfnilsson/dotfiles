@@ -21,13 +21,6 @@ return {
         -- Load VSCode-style snippets from `friendly-snippets`
         require("luasnip.loaders.from_vscode").lazy_load()
 
-        local function tab_action()
-            if cmp.visible() then
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-            else
-                cmp.complete()
-            end
-        end
         cmp.setup({
             completion = {
                 completeopt = "menu,menuone,preview,noselect",
@@ -38,8 +31,24 @@ return {
                 end,
             },
             mapping = {
-                ["<Tab>"]   = tab_action,
-                ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<Tab>"]   = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                    elseif luasnip.expand_or_jumpable() then
+                        luasnip.expand_or_jump()
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
+                ["<S-Tab>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                    elseif luasnip.jumpable(-1) then
+                        luasnip.jump(-1)
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
                 ["<CR>"]    = cmp.mapping.confirm({ select = true }),
                 ["<C-e>"]   = cmp.mapping.abort(), -- close completion window
                 ["<C-b>"]   = cmp.mapping.scroll_docs(-4),
