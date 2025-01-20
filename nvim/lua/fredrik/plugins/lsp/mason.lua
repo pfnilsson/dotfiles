@@ -33,6 +33,7 @@ return {
                 "gopls",
                 "rust_analyzer",
                 "ruff",
+                "jsonls",
             },
         })
 
