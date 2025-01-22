@@ -34,6 +34,7 @@ return {
                 "rust_analyzer",
                 "ruff",
                 "jsonls",
+                "sqls",
             },
         })
 

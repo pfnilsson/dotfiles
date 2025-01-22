@@ -9,6 +9,11 @@ return {
         -- Define your formatters
         formatters_by_ft = {
             python = { "isort", "black" },
+            sql = { "sleek" },
         },
+        format_on_save = {
+            timeout_ms = 200,
+            lsp_format = "fallback"
+        }
     },
 }

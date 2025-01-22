@@ -1,35 +1,6 @@
 -- Auto Commands
 -----------------------------------------------------------
 
--- Fix and format the buffer before writing if an LSP client is attached
-vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local clients = vim.lsp.get_clients({ bufnr = bufnr })
-
-        if vim.tbl_isempty(clients) then
-            return
-        end
-
-        local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-        for _, client in ipairs(clients) do
-            if client.name == "ruff" and filetype == "python" and vim.fn.executable("black") == 1 then
-                require("conform").format({ bufnr = bufnr, timeout_ms = 2000 })
-                break
-            end
-
-            if client.supports_method("textDocument/formatting") then
-                vim.lsp.buf.format({
-                    bufnr = bufnr,
-                    async = false,
-                    timeout_ms = 2000,
-                })
-                break
-            end
-        end
-    end,
-})
-
 -- Create an autocommand that triggers on the TextYankPost event
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
@@ -39,8 +10,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
             higroup = 'IncSearch',
             -- Time in milliseconds for the highlight to last
             timeout = 200,
-            -- Optionally, specify whether to include the visual selection
-            -- currently not needed, as we're yanking outside visual mode
         }
     end,
 })
