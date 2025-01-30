@@ -2,7 +2,6 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
         { "antosha417/nvim-lsp-file-operations", config = true },
         { "folke/neodev.nvim",                   opts = {} },
     },
@@ -10,7 +9,7 @@ return {
         -- Import required plugins
         local lspconfig = require("lspconfig")
         local mason_lspconfig = require("mason-lspconfig")
-        local cmp_nvim_lsp = require("cmp_nvim_lsp")
+        local blink_cmp = require("blink.cmp")
 
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
@@ -79,7 +78,7 @@ return {
         })
 
         -- Enhance capabilities for autocompletion
-        local capabilities = cmp_nvim_lsp.default_capabilities()
+        local capabilities = blink_cmp.get_lsp_capabilities()
 
         -- Setup Mason LSP configurations with custom handlers
         mason_lspconfig.setup_handlers({
