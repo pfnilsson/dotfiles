@@ -31,28 +31,12 @@ return {
                 end,
             },
             mapping = {
-                ["<Tab>"]   = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                    elseif luasnip.expand_or_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-                ["<S-Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                    elseif luasnip.jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-                ["<CR>"]    = cmp.mapping.confirm({ select = true }),
-                ["<C-e>"]   = cmp.mapping.abort(), -- close completion window
-                ["<C-b>"]   = cmp.mapping.scroll_docs(-4),
-                ["<C-f>"]   = cmp.mapping.scroll_docs(4),
+                ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+                ["<C-e>"] = cmp.mapping.abort(),
+                ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+                ["<C-f>"] = cmp.mapping.scroll_docs(4),
             },
             -- sources for autocompletion
             sources = cmp.config.sources({
