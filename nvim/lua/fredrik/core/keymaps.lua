@@ -72,7 +72,7 @@ local function open_buffers_filter_copilot()
     require('telescope.builtin').buffers({
         sort_mru = true,
         sort_lastused = true,
-        initial_mode = "normal",
+        initial_mode = "insert",
         file_ignore_patterns = { "^copilot%-chat$" }, -- Exclude 'copilot-chat' buffer
     })
 end
@@ -102,7 +102,7 @@ vim.keymap.set('n', '"', '^', { noremap = true, silent = true })
 vim.keymap.set({ 'n', 'v', 'o' }, '"', '^', { noremap = true, silent = true })
 
 -- Remap ~ to § to use the same key as US keyboard
-vim.keymap.set('n', '§', '~', { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, '§', '~', { noremap = true, silent = true })
 
 -- Fix all with <leaer>cf
 local function fixAll()
@@ -156,11 +156,11 @@ vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+y$]])
 
 -- <leader>p/P to paste from system clipboard
-vim.keymap.set("n", "<leader>p", [["+p]])
+vim.keymap.set({ "n", "x" }, "<leader>p", [["+p]])
 vim.keymap.set("n", "<leader>P", '"+]p')
 
 -- Paste over highlight without losing current clipboard value
-vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>P", [["_dP]])
 
 -- Remap Y to y$
 vim.keymap.set("n", "Y", "y$", { noremap = true, silent = true })
@@ -179,8 +179,8 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set('i', '<C-l>', '<Right>', { noremap = true, silent = true })
 
 -- Quickfix binds
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 
 -- Function to toggle the Quickfix List
 local function toggle_quickfix()
@@ -246,3 +246,6 @@ vim.keymap.set('n', '´', ':b#<CR>', { noremap = true, silent = true })
 
 -- Toggle treesitter context
 vim.keymap.set('n', '<leader>ts', ':TSContextToggle<CR>')
+
+-- Quit with <leader>Q
+vim.keymap.set('n', '<leader>Q', ':q<CR>')
