@@ -22,3 +22,6 @@ keybind = global:f12=toggle_quick_terminal
 
 # make quick terminal sticky
 quick-terminal-autohide = false
+
+# make text in block cursor black
+cursor-text = #000000

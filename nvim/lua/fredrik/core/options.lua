@@ -17,7 +17,7 @@ vim.opt.smartindent = true
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- Leave atleast 3 lines above/below cursor
+-- Leave at least 5 lines above/below cursor
 vim.opt.scrolloff = 5
 
 -- no line wrapping
