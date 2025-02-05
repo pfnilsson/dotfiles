@@ -17,7 +17,7 @@ cp ~/.zshrc "$SCRIPT_DIR"/scripts/.zshrc
 
 # Copy the neovim config to /nvim
 rsync -a --delete ~/.config/nvim/ "$SCRIPT_DIR"/nvim
-rsync -a --delete ~/.config/nvim/ ~/.devcontainer/dotfiles/nvim
+rsync -a --delete ~/.config/nvim/ ~/.devcontainer/dotfiles/nvim_config/nvim
 
 # Copy the tmux config to /tmux
 rsync -a --delete ~/.config/tmux/ "$SCRIPT_DIR"/tmux

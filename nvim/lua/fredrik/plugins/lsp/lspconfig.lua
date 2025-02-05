@@ -11,6 +11,14 @@ return {
         local mason_lspconfig = require("mason-lspconfig")
         local blink_cmp = require("blink.cmp")
 
+        local ok, secrets = pcall(require, "fredrik.secrets")
+        if not ok then
+            secrets = {
+                bazel_dir_filter = "",
+                local_import_path = ""
+            }
+        end
+
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
             virtual_text = {
@@ -127,6 +135,51 @@ return {
                             }
                         },
                     }
+                })
+            end,
+            ["gopls"] = function()
+                lspconfig["gopls"].setup({
+                    capabilities = capabilities,
+                    settings = {
+                        gopls = {
+                            env = {
+                                -- Set the custom GOPACKAGESDRIVER script
+                                GOPACKAGESDRIVER = "./scripts/gopackagesdriver.sh",
+                            },
+                            directoryFilters = {
+                                "-bazel-bin",
+                                "-bazel-out",
+                                "-bazel-testlogs",
+                                secrets.bazel_dir_filter,
+                            },
+                            analyses = {
+                                unusedparams = true,
+                                unusedwrite = true,
+                            },
+                            staticcheck = true,
+                            -- Enable gofumpt for formatting
+                            formatting = {
+                                gofumpt = true,
+                                ["local"] = secrets.local_import_path, -- Local import organization
+                            },
+                            -- UI-related settings
+                            ui = {
+                                completion = {
+                                    usePlaceholders = true, -- Use placeholders in completions
+                                },
+                                semanticTokens = true,      -- Enable semantic tokens
+                                codelenses = {
+                                    gc_details = false,
+                                    regenerate_cgo = false,
+                                    generate = false,
+                                    test = false,
+                                    tidy = false,
+                                    upgrade_dependency = false,
+                                    vendor = false,
+                                },
+                            },
+                        },
+                    },
                 })
             end,
         })
