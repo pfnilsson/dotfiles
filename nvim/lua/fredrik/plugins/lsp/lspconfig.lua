@@ -142,7 +142,7 @@ return {
                     capabilities = capabilities,
                     settings = {
                         gopls = {
-                            env = {
+                            env              = {
                                 -- Set the custom GOPACKAGESDRIVER script
                                 GOPACKAGESDRIVER = "./scripts/gopackagesdriver.sh",
                             },
@@ -152,31 +152,29 @@ return {
                                 "-bazel-testlogs",
                                 secrets.bazel_dir_filter,
                             },
-                            analyses = {
+                            analyses         = {
                                 unusedparams = true,
                                 unusedwrite = true,
                             },
-                            staticcheck = true,
+                            staticcheck      = true,
+
                             -- Enable gofumpt for formatting
-                            formatting = {
-                                gofumpt = true,
-                                ["local"] = secrets.local_import_path, -- Local import organization
-                            },
+                            gofumpt          = true,
+
+                            -- Local import organization
+                            ["local"]        = secrets.local_import_path,
+
                             -- UI-related settings
-                            ui = {
-                                completion = {
-                                    usePlaceholders = true, -- Use placeholders in completions
-                                },
-                                semanticTokens = true,      -- Enable semantic tokens
-                                codelenses = {
-                                    gc_details = false,
-                                    regenerate_cgo = false,
-                                    generate = false,
-                                    test = false,
-                                    tidy = false,
-                                    upgrade_dependency = false,
-                                    vendor = false,
-                                },
+                            usePlaceholders  = true, -- Use placeholders in completions
+                            semanticTokens   = true, -- Enable semantic tokens
+                            codelenses       = {
+                                gc_details = false,
+                                regenerate_cgo = false,
+                                generate = false,
+                                test = false,
+                                tidy = false,
+                                upgrade_dependency = false,
+                                vendor = false,
                             },
                         },
                     },

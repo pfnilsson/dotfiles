@@ -8,6 +8,12 @@ curljq() {
   fi
 }
 
+# Start devbox shell
+dbu() {
+  local input="$1"
+  devbox up "$input" --ide=none && devbox shell "$input"
+}
+
 # Languge specific grep shorthands
 alias grepy="grep -rn --include='*.py' --exclude-dir='*venv'"
 alias grepgo="grep -rn --include='*.go'"
