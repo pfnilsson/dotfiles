@@ -140,6 +140,18 @@ return {
             ["gopls"] = function()
                 lspconfig["gopls"].setup({
                     capabilities = capabilities,
+                    root_dir = function(fname)
+                        local util = require("lspconfig.util")
+
+                        -- If we find a WORKSPACE in the ancestry, prefer that (typical Bazel approach).
+                        local root = util.root_pattern("WORKSPACE")(fname)
+                        if root then
+                            return root
+                        end
+
+                        -- Fallback: if not recognized as a Bazel path, use normal approach
+                        return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
+                    end,
                     settings = {
                         gopls = {
                             env              = {
