@@ -1,3 +1,7 @@
+local function strip_trailing_slash(path)
+    return path:gsub("/$", "")
+end
+
 return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -144,14 +148,14 @@ return {
                         end
 
                         if fname:find("^" .. secrets.repo_path) or fname:find(secrets.cache_path) then
-                            return secrets.repo_path
+                            return strip_trailing_slash(secrets.repo_path)
                         end
 
                         -- Fallback: if not recognized as a Bazel path, use normal approach
                         return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
                     end,
                     on_new_config = function(new_config, root_dir)
-                        if root_dir == secrets.repo_path then
+                        if strip_trailing_slash(root_dir) == strip_trailing_slash(secrets.repo_path) then
                             new_config.cmd_env = vim.tbl_extend("force", new_config.cmd_env or {}, {
                                 GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
                                 GOROOT = secrets.repo_path .. secrets.go_root
@@ -160,10 +164,6 @@ return {
                     end,
                     settings = {
                         gopls = {
-                            env              = {
-                                -- Set the custom GOPACKAGESDRIVER script
-                                GOPACKAGESDRIVER = "./scripts/gopackagesdriver.sh",
-                            },
                             directoryFilters = {
                                 "-bazel-bin",
                                 "-bazel-out",
