@@ -73,12 +73,8 @@ return {
         telescope.setup({
             defaults = {
                 mappings = {
-                    n = {
-                        ["d"] = actions.delete_buffer,
-                        ["q"] = actions.close,
-                        ["<CR>"] = select_and_close_nvim_tree,
-                    },
                     i = {
+                        ["<C-d>"] = actions.delete_buffer,
                         ["<CR>"] = select_and_close_nvim_tree,
                         ["<esc>"] = actions.close,
                         ["<C-j>"] = actions.move_selection_next,
