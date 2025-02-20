@@ -21,9 +21,3 @@ vim.api.nvim_create_autocmd("BufLeave", {
         vim.cmd("silent! write")
     end,
 })
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-    callback = function()
-        vim.cmd("highlight Cursor gui=NONE guifg=#000000 guibg=#cdd6f4")
-    end
-})
