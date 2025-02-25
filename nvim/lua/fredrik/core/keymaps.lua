@@ -165,6 +165,18 @@ vim.keymap.set("x", "<leader>P", [["_dP]])
 -- Remap Y to y$
 vim.keymap.set("n", "Y", "y$", { noremap = true, silent = true })
 
+-- <leader>ay to yank entire buffer
+vim.keymap.set('n', '<leader>ay', ':%yank<CR>', { noremap = true, silent = true })
+
+-- <leader>aY to yank entire buffer to system clipboard
+vim.keymap.set('n', '<leader>aY', ':%yank +<CR>', { noremap = true, silent = true })
+
+-- <leader>ap to paste over entire buffer
+vim.keymap.set('n', '<leader>ap', ":%delete _<CR>:0put \"<CR>", { noremap = true, silent = true })
+
+-- <leader>aP to paste over entire buffer from system clipboard
+vim.keymap.set('n', '<leader>aP', ":%delete _<CR>:0put +<CR>", { noremap = true, silent = true })
+
 -- <leader>o/O to insert line below/above and stay in normal mode
 vim.keymap.set("n", "<leader>o", "mzo<Esc>`z")
 vim.keymap.set("n", "<leader>O", "mzO<Esc>`z")
