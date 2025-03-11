@@ -98,13 +98,13 @@ vim.keymap.set('v', 'å', ']') -- Visual mode remap for å
 vim.keymap.set('v', 'Å', '[') -- Visual mode remap for Å
 
 -- Remap ^ to " to make it easier to press on a swedish keyboard
-vim.keymap.set('n', '"', '^', { noremap = true, silent = true })
 vim.keymap.set({ 'n', 'v', 'o' }, '"', '^', { noremap = true, silent = true })
+vim.keymap.set('s', '"', '"', { noremap = true, silent = true }) -- explicitly bind back for SELECT mode
 
 -- Remap ~ to § to use the same key as US keyboard
 vim.keymap.set({ 'n', 'v' }, '§', '~', { noremap = true, silent = true })
 
--- Fix all with <leaer>cf
+-- Fix all with <leader>cf
 local function fixAll()
     vim.lsp.buf.code_action({
         context = { only = { "source.fixAll" } },

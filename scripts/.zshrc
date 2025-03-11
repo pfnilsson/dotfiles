@@ -32,3 +32,8 @@ alias python3.12="~/.local/share/uv/python/cpython-3.12.7-macos-aarch64-none/bin
 
 # Java env init
 eval "$(jenv init -)"
+
+# Bazel alias
+alias brg="bazel run //:gazelle"
+
+source /Users/fredrik/.pretzel/pretzel.zsh
