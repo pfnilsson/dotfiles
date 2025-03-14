@@ -261,3 +261,26 @@ vim.keymap.set('n', '<leader>ts', ':TSContextToggle<CR>')
 
 -- Quit with <leader>Q
 vim.keymap.set('n', '<leader>Q', ':q<CR>')
+
+-- Open current buffer in browser
+local sysname = vim.loop.os_uname().sysname
+local open_cmd, tmp_file
+
+if sysname == "Windows_NT" then
+    open_cmd = "start"
+    tmp_file = vim.fn.expand("$TEMP") .. "\\neovim.html"
+elseif sysname == "Darwin" then
+    open_cmd = "open"
+    tmp_file = "/tmp/neovim.html"
+else -- assume Linux
+    open_cmd = "xdg-open"
+    tmp_file = "/tmp/neovim.html"
+end
+
+-- Create a key mapping to convert the current buffer to HTML and open it in the browser.
+vim.api.nvim_set_keymap(
+    'n',
+    '<leader>cx',
+    ':TOhtml<CR>:w! ' .. tmp_file .. '<CR>:silent !' .. open_cmd .. ' ' .. tmp_file .. '<CR>:bd!<CR>',
+    { noremap = true, silent = true }
+)
