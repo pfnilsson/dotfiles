@@ -21,3 +21,9 @@ vim.api.nvim_create_autocmd("BufLeave", {
         vim.cmd("silent! write")
     end,
 })
+
+-- check for changes on disk when focusing Neovim or entering a buffer
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+    pattern = "*",
+    command = "checktime"
+})
