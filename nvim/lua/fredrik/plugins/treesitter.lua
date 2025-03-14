@@ -20,6 +20,7 @@ return {
                 "typescript",
                 "cpp",
                 "c",
+                "terraform"
             },
             highlight = { enable = true },
             additional_vim_regex_highlighting = false,

@@ -35,6 +35,7 @@ return {
                 "ruff",
                 "jsonls",
                 "sqls",
+                "terraformls"
             },
         })
 
