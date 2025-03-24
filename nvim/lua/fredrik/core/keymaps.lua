@@ -127,6 +127,9 @@ vim.keymap.set("n", "<leader>co", organizeImports, { desc = "Organize Imports" }
 -- LSP rename with <leader>cr
 vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "LSP Rename" })
 
+-- Restart LSP with <leader>cR
+vim.keymap.set("n", "<leader>cR", "<cmd>LspRestart<CR>", { noremap = true, silent = true })
+
 -- See available code actions
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "See available code actions" })
 
@@ -148,8 +151,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- <leader>d delete into void registry
-vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d")
+-- <leader>D delete into void registry
+vim.keymap.set({ "n", "v" }, "<leader>D", "\"_d")
 
 -- <leader>y/Y to yank to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])

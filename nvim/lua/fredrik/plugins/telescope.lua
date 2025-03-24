@@ -81,6 +81,8 @@ return {
                         ["<C-k>"] = actions.move_selection_previous,
                         ["<Up>"] = function() end,
                         ["<Down>"] = function() end,
+                        ["<C-l>"] = function() end,
+                        ["<C-h>"] = function() end,
                     }
                 },
             },

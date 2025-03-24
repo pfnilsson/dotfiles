@@ -45,6 +45,7 @@ return {
                 "stylua",
                 "pylint",
                 "eslint_d",
+                "delve"
             },
         })
     end,
