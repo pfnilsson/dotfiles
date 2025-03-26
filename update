@@ -25,7 +25,7 @@ rsync -a --delete ~/.config/tmux/ "$SCRIPT_DIR"/tmux
 cp ~/.config/git/ignore "$SCRIPT_DIR"/git/ignore
 
 # Export Rectangle config
-defaults export com.knollsoft.Rectangle "$SCRIPT_DIR"/RectangleSettings.plist
+defaults export com.knollsoft.Rectangle "$SCRIPT_DIR"/rectangle/RectangleSettings.plist
 
 # Remove git files from the catpuccin plugin inside tmux
 rm -rf tmux/plugins/catppuccin/tmux/.git
