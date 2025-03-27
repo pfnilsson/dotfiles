@@ -32,11 +32,16 @@ return {
         })
 
         -- Define signs for different severities
-        local signs = { Error = "✗", Warn = "!", Hint = "➤", Info = "I" }
-        for type, icon in pairs(signs) do
-            local hl = "DiagnosticSign" .. type
-            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-        end
+        vim.diagnostic.config({
+            signs = {
+                active = {
+                    { name = "DiagnosticSignError", text = "✗" },
+                    { name = "DiagnosticSignWarn", text = "!" },
+                    { name = "DiagnosticSignHint", text = "➤" },
+                    { name = "DiagnosticSignInfo", text = "I" },
+                },
+            },
+        })
 
         -- Create an autocommand for LSP attachment to set keybindings
         vim.api.nvim_create_autocmd("LspAttach", {
