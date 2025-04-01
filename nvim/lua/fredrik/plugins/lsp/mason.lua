@@ -35,7 +35,7 @@ return {
                 "ruff",
                 "jsonls",
                 "sqls",
-                "terraformls"
+                "terraformls",
             },
         })
 
@@ -45,7 +45,7 @@ return {
                 "stylua",
                 "pylint",
                 "eslint_d",
-                "delve"
+                "delve",
             },
         })
     end,

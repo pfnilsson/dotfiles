@@ -18,21 +18,7 @@ return {
 
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
-            virtual_text = {
-                prefix = '●', -- Could be '■', '▎', etc.
-            },
-            signs = true,
-            underline = true,
-            update_in_insert = false,
-            severity_sort = true,
-            float = {
-                border = "rounded",
-                source = "always", -- Show the source (ruff, flake8) in floating windows
-            },
-        })
-
-        -- Define signs for different severities
-        vim.diagnostic.config({
+            virtual_text = { prefix = '●' },
             signs = {
                 active = {
                     { name = "DiagnosticSignError", text = "✗" },
@@ -41,6 +27,10 @@ return {
                     { name = "DiagnosticSignInfo", text = "I" },
                 },
             },
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
+            float = { border = "rounded", source = "always" },
         })
 
         -- Create an autocommand for LSP attachment to set keybindings
