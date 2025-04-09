@@ -209,7 +209,17 @@ return {
                     },
                 },
                 sources = {
-                    explorer = {}
+                    explorer = {
+                        win = {
+                            list = {
+                                wo = {
+                                    number = true,
+                                    relativenumber = true
+                                }
+                            }
+
+                        }
+                    }
                 }
             },
         },
