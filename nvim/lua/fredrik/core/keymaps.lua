@@ -67,22 +67,6 @@ vim.keymap.set("n", "åi", function()
     vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to next information" })
 
--- View open buffers with Telescope
-local function open_buffers_filter_copilot()
-    require('telescope.builtin').buffers({
-        sort_mru = true,
-        sort_lastused = true,
-        initial_mode = "insert",
-        file_ignore_patterns = { "^copilot%-chat$" }, -- Exclude 'copilot-chat' buffer
-    })
-end
-vim.keymap.set(
-    "n",
-    "<leader>b",
-    open_buffers_filter_copilot,
-    { desc = "[P] Open Telescope buffers" }
-)
-
 -- Save the file
 vim.keymap.set("n", "<leader>w", ":write<CR>", { noremap = true, silent = true, desc = "Save File" })
 vim.keymap.set('n', '<leader>W', ':wa<CR>', { noremap = true, silent = true, desc = "Save All" })

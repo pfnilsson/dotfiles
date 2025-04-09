@@ -32,8 +32,7 @@ return {
                 vim.keymap.set('n', '<leader>gR', gs.reset_buffer, { desc = "Reset Buffer" })
                 vim.keymap.set('n', '<leader>gp', gs.preview_hunk, { desc = "Preview Hunk" })
                 vim.keymap.set('n', '<leader>gS', gs.stage_hunk, { desc = "Stage Hunk" })
-                vim.keymap.set('n', '<leader>gD', function() gs.diffthis("~") end, { desc = "Diff" })
-                vim.keymap.set('n', '<leader>gd', gs.toggle_deleted, { desc = "Toggle Deleted" })
+                vim.keymap.set('n', '<leader>gD', gs.toggle_deleted, { desc = "Toggle Deleted" })
             end
         }
     end

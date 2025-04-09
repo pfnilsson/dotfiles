@@ -42,7 +42,7 @@ if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
         tmux send-keys -t "$selected_name":2 "source $VENV_DIR/bin/activate && clear" C-m
     fi
 
-    tmux send-keys -t "$selected_name":1 "nvim ." C-m
+    tmux send-keys -t "$selected_name":1 "nvim" C-m
     tmux attach-session -t "$selected_name":1 
     exit 0
 fi
@@ -59,7 +59,7 @@ if ! tmux has-session -t="$selected_name" 2> /dev/null; then
         tmux send-keys -t "$selected_name":2 "source $VENV_DIR/bin/activate && clear" C-m
     fi
 
-    tmux send-keys -t "$selected_name":1 "nvim ." C-m
+    tmux send-keys -t "$selected_name":1 "nvim" C-m
 fi
 
 # Case 3: Switch to the session if inside tmux, otherwise attach to it

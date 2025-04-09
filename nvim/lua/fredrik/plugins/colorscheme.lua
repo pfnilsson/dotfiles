@@ -12,7 +12,6 @@ return {
                 cmp = true,
                 gitsigns = true,
                 nvimtree = true,
-                telescope = true,
                 treesitter = true,
             },
         })

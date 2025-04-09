@@ -11,7 +11,8 @@ return {
                     next = "<C-n>",
                     prev = "<C-p>"
                 }
-            }
+            },
+            copilot_model = "claude-sonnet-3.7"
         })
     end
 }

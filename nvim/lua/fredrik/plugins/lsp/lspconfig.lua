@@ -38,26 +38,8 @@ return {
             group = vim.api.nvim_create_augroup("UserLspConfig", {}),
             callback = function(ev)
                 -- Buffer local mappings.
-                local opts = { buffer = ev.buf, silent = true }
-
-                -- Set keybinds with descriptions
-                opts.desc = "Show LSP references"
-                vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
-
-                opts.desc = "Go to declaration"
-                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-
-                opts.desc = "Show LSP definitions"
-                vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
-
-                opts.desc = "Show LSP implementations"
-                vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-
-                opts.desc = "Show LSP type definitions"
-                vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
-
-                opts.desc = "Smart rename"
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,
+                    { buffer = ev.buf, silent = true, desc = "Smart rename" })
             end,
         })
 
