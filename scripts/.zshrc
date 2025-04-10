@@ -37,5 +37,6 @@ eval "$(jenv init -)"
 alias brg="bazel run //:gazelle"
 alias btd="bazel test //nodes/decision-systems/... --test_output=errors"
 alias bmt="bazel run //:go -- mod tidy -e"
+alias ls="ls --color=auto"
 
 source /Users/fredrik/.pretzel/pretzel.zsh

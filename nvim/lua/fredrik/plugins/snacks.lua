@@ -100,7 +100,7 @@ return {
             { "gi",         function() Snacks.picker.lsp_implementations() end,  desc = "Goto Implementation" },
             { "gt",         function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
             {
-                "<leader>th",
+                "<leader>E",
                 function()
                     Snacks.picker.explorer({
                         finder = "explorer",
