@@ -24,6 +24,7 @@ return {
             },
         })
 
+        ---@diagnostic disable-next-line: missing-fields
         mason_lspconfig.setup({
             -- list of servers for mason to install
             ensure_installed = {

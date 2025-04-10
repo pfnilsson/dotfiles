@@ -15,6 +15,7 @@ return {
             require("dapui").setup()
             require("dap-go").setup()
 
+            ---@diagnostic disable-next-line: missing-parameter
             require("nvim-dap-virtual-text").setup()
 
             vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "DiagnosticSignError", linehl = "", numhl = "" })
@@ -27,6 +28,7 @@ return {
 
             -- Eval var under cursor
             vim.keymap.set("n", "<space>?", function()
+                ---@diagnostic disable-next-line: missing-fields
                 require("dapui").eval(nil, { enter = true })
             end)
 
