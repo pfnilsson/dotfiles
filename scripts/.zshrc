@@ -39,4 +39,9 @@ alias btd="bazel test //nodes/decision-systems/... --test_output=errors"
 alias bmt="bazel run //:go -- mod tidy -e"
 alias ls="ls --color=auto"
 
+# Source pretzel
 source /Users/fredrik/.pretzel/pretzel.zsh
+
+# Use neovim as default editor
+export EDITOR="nvim"
+export VISUAL="nvim"

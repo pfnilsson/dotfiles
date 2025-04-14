@@ -152,16 +152,10 @@ return {
                                 unusedwrite = true,
                             },
                             staticcheck      = true,
-
-                            -- Enable gofumpt for formatting
                             gofumpt          = true,
-
-                            -- Local import organization
                             ["local"]        = secrets.local_import_path,
-
-                            -- UI-related settings
-                            usePlaceholders  = true, -- Use placeholders in completions
-                            semanticTokens   = true, -- Enable semantic tokens
+                            usePlaceholders  = true,
+                            semanticTokens   = true,
                             codelenses       = {
                                 gc_details = false,
                                 regenerate_cgo = false,
