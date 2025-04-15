@@ -45,3 +45,6 @@ source /Users/fredrik/.pretzel/pretzel.zsh
 # Use neovim as default editor
 export EDITOR="nvim"
 export VISUAL="nvim"
+
+# Excplicitly bind Ctrl-R to reverse search because tmux sometimes breaks it
+bindkey '^R' history-incremental-search-backward
