@@ -8,6 +8,8 @@ return {
             end, 0)
         end,
         keys = {
+            { "<leader>gx", function() Snacks.gitbrowse.open() end, mode = { "n", "v" } },
+            { "<leader>lg", function() Snacks.lazygit.open() end },
             {
                 "<leader>gl",
                 function()
@@ -166,6 +168,24 @@ return {
             }
         },
         opts = {
+            gitbrowse = {
+                open = function(url)
+                    local mode = vim.fn.mode()
+
+                    if mode ~= "v" and mode ~= "V" and mode ~= "\22" then
+                        -- Remove patterns for GitHub/GitLab style anchors: "#L<start>-L<end>"
+                        url = url:gsub("#L%d+%-L%d+", "")
+                        -- Remove Bitbucket style anchors: "#lines-<start>-L<end>"
+                        url = url:gsub("#lines%-%d+%-L%d+", "")
+                        -- Remove git.sr.ht style anchors: "#L<start>"
+                        url = url:gsub("#L%d+", "")
+                    end
+
+                    vim.ui.open(url)
+                end
+            },
+
+            lazygit = {},
             explorer = {},
             picker = {
                 layout = { preset = "default" },

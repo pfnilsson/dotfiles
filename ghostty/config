@@ -25,3 +25,6 @@ quick-terminal-autohide = false
 
 # make text in block cursor black
 cursor-text = #000000
+
+# set term
+term = xterm-256color
