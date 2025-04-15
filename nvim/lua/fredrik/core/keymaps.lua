@@ -164,9 +164,11 @@ vim.keymap.set('n', '<leader>ap', ":%delete _<CR>:0put \"<CR>", { noremap = true
 -- <leader>aP to paste over entire buffer from system clipboard
 vim.keymap.set('n', '<leader>aP', ":%delete _<CR>:0put +<CR>", { noremap = true, silent = true })
 
--- <leader>o/O to insert line below/above and stay in normal mode
-vim.keymap.set("n", "<leader>o", "mzo<Esc>`z")
-vim.keymap.set("n", "<leader>O", "mzO<Esc>`z")
+-- Remap V to v$h
+vim.keymap.set("n", "V", "v$h", { noremap = true, silent = true })
+
+-- Remap vv to V
+vim.keymap.set("n", "vv", "V", { noremap = true, silent = true })
 
 -- make sure C-c is equivalent to <Esc> inserting in visual block mode
 vim.keymap.set("i", "<C-c>", "<Esc")
