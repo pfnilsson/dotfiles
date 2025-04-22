@@ -48,3 +48,7 @@ export VISUAL="nvim"
 
 # Excplicitly bind Ctrl-R to reverse search because tmux sometimes breaks it
 bindkey '^R' history-incremental-search-backward
+
+# Syntax highlighting
+source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

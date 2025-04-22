@@ -27,6 +27,9 @@ cp ~/.config/git/ignore "$SCRIPT_DIR"/git/ignore
 # Export Rectangle config
 defaults export com.knollsoft.Rectangle "$SCRIPT_DIR"/rectangle/RectangleSettings.plist
 
+# Copy catppuccin for zsh syntax highlighting
+cp ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh "$SCRIPT_DIR"/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+
 # Remove git files from the catpuccin plugin inside tmux
 rm -rf tmux/plugins/catppuccin/tmux/.git
 rm -rf tmux/plugins/catppuccin/tmux/.github
