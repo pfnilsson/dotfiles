@@ -12,8 +12,11 @@ cp ~/.config/ghostty/config "$SCRIPT_DIR"/ghostty/config
 # Copy the karabiner elements config to /karabiner
 cp ~/.config/karabiner/karabiner.json "$SCRIPT_DIR"/karabiner/karabiner.json
 
-# Copy .zshrc to /scripts
-cp ~/.zshrc "$SCRIPT_DIR"/scripts/.zshrc
+# Copy .zshrc to /zsh
+cp ~/.zshrc "$SCRIPT_DIR"/zsh/.zshrc
+
+# Copy catppuccin for zsh syntax highlighting
+cp ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh "$SCRIPT_DIR"/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
 # Copy the neovim config to /nvim
 rsync -a --delete ~/.config/nvim/ "$SCRIPT_DIR"/nvim
@@ -26,9 +29,6 @@ cp ~/.config/git/ignore "$SCRIPT_DIR"/git/ignore
 
 # Export Rectangle config
 defaults export com.knollsoft.Rectangle "$SCRIPT_DIR"/rectangle/RectangleSettings.plist
-
-# Copy catppuccin for zsh syntax highlighting
-cp ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh "$SCRIPT_DIR"/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
 # Remove git files from the catpuccin plugin inside tmux
 rm -rf tmux/plugins/catppuccin/tmux/.git
