@@ -111,9 +111,6 @@ vim.keymap.set("n", "<leader>co", organizeImports, { desc = "Organize Imports" }
 -- LSP rename with <leader>cr
 vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "LSP Rename" })
 
--- Restart LSP with <leader>cR
-vim.keymap.set("n", "<leader>cR", "<cmd>LspRestart<CR>", { noremap = true, silent = true, desc = "Restart LSP" })
-
 -- See available code actions
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "See available code actions" })
 

@@ -11,11 +11,14 @@ curljq() {
   fi
 }
 
-# Start devbox shell
-dbu() {
-  local input="$1"
-  devbox up "$input" --ide=none && devbox shell "$input"
+# Start nvim with a socket name per cwd
+nvim() {
+  local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
+  command nvim --listen "$socket" "$@"
 }
+
+# Start nvim with remote
+export NVIM_LISTEN_ADDRESS="/tmp/nvim.sock"
 
 # Languge specific grep shorthands
 alias grepy="grep -rn --include='*.py' --exclude-dir='*venv'"
@@ -36,8 +39,27 @@ alias python3.12="~/.local/share/uv/python/cpython-3.12.7-macos-aarch64-none/bin
 # Java env init
 eval "$(jenv init -)"
 
+# gazelle utility function including restarting gopls 
+function gazelle() {
+  if bazel run //:gazelle -- "$@"; then
+    local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
+    # Check if Neovim is running and listening at the computed socket.
+    if nvr --servername "$socket" --nostart --remote-expr "v:true" &>/dev/null; then
+      # Restart gopls if it's running inside the found Neovim instance.
+      nvr --servername "$socket" --nostart -c \
+        "lua for _,c in pairs(vim.lsp.get_clients()) do if c.name=='gopls' then vim.cmd('LspRestart gopls') break end end" \
+        || true
+      echo "✅ gopls restarted via Neovim remote"
+    else
+      echo "⚠️ Neovim is not running or not listening at $socket"
+    fi
+  else
+    echo "❌ gazelle failed"
+  fi
+}
+
 # Bazel aliases
-alias brg="bazel run //:gazelle"
+alias brg="gazelle"
 alias btd="bazel test //nodes/decision-systems/... --test_output=errors"
 alias bmt="bazel run //:go -- mod tidy -e"
 
