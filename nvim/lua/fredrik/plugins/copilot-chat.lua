@@ -7,7 +7,13 @@ return {
         },
         build = "make tiktoken",                            -- Only on MacOS or Linux
         opts = {
-            model = "claude-3.7-sonnet-thought"
+            model = "claude-3.7-sonnet-thought",
+            mappings = {
+                reset = {
+                    insert = false,
+                    normal = "<C-L>"
+                }
+            }
         },
     },
 }

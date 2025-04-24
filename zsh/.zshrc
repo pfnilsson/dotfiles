@@ -1,3 +1,6 @@
+# Use vi mode
+bindkey -v
+
 # Pretty json output from curl
 curljq() {
   output=$(curl -sS "$@")
@@ -37,6 +40,8 @@ eval "$(jenv init -)"
 alias brg="bazel run //:gazelle"
 alias btd="bazel test //nodes/decision-systems/... --test_output=errors"
 alias bmt="bazel run //:go -- mod tidy -e"
+
+# Colorize ls
 alias ls="ls --color=auto"
 
 # Source pretzel

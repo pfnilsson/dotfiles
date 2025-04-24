@@ -171,7 +171,7 @@ vim.keymap.set("n", "V", "v$h", { noremap = true, silent = true })
 vim.keymap.set("n", "vv", "V", { noremap = true, silent = true })
 
 -- make sure C-c is equivalent to <Esc> inserting in visual block mode
-vim.keymap.set("i", "<C-c>", "<Esc")
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
 -- disable entry in to Ex mode
 vim.keymap.set("n", "Q", "<nop>")
