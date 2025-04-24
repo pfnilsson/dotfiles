@@ -1,6 +1,32 @@
 # Use vi mode
 bindkey -v
 
+# Binds shift-2 to first non blank
+bindkey -M vicmd '"' vi-first-non-blank
+
+# binds shift-4 to end of line
+bindkey -M vicmd '€' vi-end-of-line
+
+# binds Y to yank to end of line
+bindkey -M vicmd 'Y' vi-yank-eol
+
+# binds V to visual to end of line
+function vi-visual-to-eol() {
+  zle visual-mode
+  zle vi-end-of-line
+}
+zle -N vi-visual-to-eol
+bindkey -M vicmd 'V' vi-visual-to-eol
+
+# bind vv to visual select current line 
+function vi-visual-whole-line() {
+  zle vi-beginning-of-line
+  zle visual-mode
+  zle vi-end-of-line
+}
+zle -N vi-visual-whole-line
+bindkey -M vicmd 'vv' vi-visual-whole-line
+
 # Pretty json output from curl
 curljq() {
   output=$(curl -sS "$@")
