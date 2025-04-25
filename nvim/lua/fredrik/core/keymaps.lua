@@ -18,54 +18,66 @@ vim.keymap.set("o", "<Space>", "<Nop>", opts)
 -- Diagnostic navigation
 
 -- Go to previous diagnostic
-vim.keymap.set("n", "Åd", function()
-    vim.diagnostic.goto_prev()
+vim.keymap.set("n", "ÅD", function()
+    vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Go to previous diagnostic" })
 
 -- Go to next diagnostic
 vim.keymap.set("n", "åd", function()
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Go to next diagnostic" })
 
 -- Go to previous error
-vim.keymap.set("n", "Åe", function()
-    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+vim.keymap.set("n", "ÅE", function()
+    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })
 end, { desc = "Go to previous error" })
 
 -- Go to next error
 vim.keymap.set("n", "åe", function()
-    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })
 end, { desc = "Go to next error" })
 
 -- Go to previous warning
-vim.keymap.set("n", "Åw", function()
-    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
+vim.keymap.set("n", "ÅW", function()
+    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })
 end, { desc = "Go to previous warning" })
 
 -- Go to next warning
 vim.keymap.set("n", "åw", function()
-    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
+    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })
 end, { desc = "Go to next warning" })
 
 -- Go to previous hint
-vim.keymap.set("n", "Åh", function()
-    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.HINT })
+vim.keymap.set("n", "ÅH", function()
+    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.HINT })
 end, { desc = "Go to previous hint" })
 
 -- Go to next hint
 vim.keymap.set("n", "åh", function()
-    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.HINT })
+    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.HINT })
 end, { desc = "Go to next hint" })
 
 -- Go to previous information
-vim.keymap.set("n", "Åi", function()
-    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.INFO })
+vim.keymap.set("n", "ÅI", function()
+    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to previous information" })
 
 -- Go to next information
 vim.keymap.set("n", "åi", function()
-    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.INFO })
+    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to next information" })
+
+-- Go to next blank line
+vim.keymap.set("n", "åb", function() vim.fn.search("^\\s*$", "W") end, { desc = "Next blank line" })
+
+-- Go to previous blank line
+vim.keymap.set("n", "ÅB", function() vim.fn.search("^\\s*$", "bW") end, { desc = "Previous blank line" })
+
+-- Next section
+vim.keymap.set({ 'n', 'x', 'o' }, 'åå', ']]', { desc = "Next section (åå)" })
+
+-- Previous section
+vim.keymap.set({ 'n', 'x', 'o' }, 'ÅÅ', '[[', { desc = "Previous section (ÅÅ)" })
 
 -- Save the file
 vim.keymap.set("n", "<leader>w", ":write<CR>", { noremap = true, silent = true, desc = "Save File" })
@@ -74,12 +86,6 @@ vim.keymap.set('n', '<leader>W', ':wa<CR>', { noremap = true, silent = true, des
 -- Remap End of Line to be Shift+4 like on a US keyboard layout
 vim.keymap.set({ 'n', 'v', 'o' }, '€', '$', { noremap = true, silent = true })
 vim.keymap.set({ 'n', 'v', 'o' }, '¤', '$', { noremap = true, silent = true })
-
--- Remap [ and ] to Å and å to match US keyboard shortcuts
-vim.keymap.set('n', 'å', ']') -- Normal mode remap for å
-vim.keymap.set('n', 'Å', '[') -- Normal mode remap for Å
-vim.keymap.set('v', 'å', ']') -- Visual mode remap for å
-vim.keymap.set('v', 'Å', '[') -- Visual mode remap for Å
 
 -- Remap ^ to " to make it easier to press on a swedish keyboard
 vim.keymap.set({ 'n', 'v', 'o' }, '"', '^', { noremap = true, silent = true })
@@ -91,7 +97,7 @@ vim.keymap.set({ 'n', 'v' }, '§', '~', { noremap = true, silent = true })
 -- Fix all with <leader>cf
 local function fixAll()
     vim.lsp.buf.code_action({
-        context = { only = { "source.fixAll" } },
+        context = { only = { "source.fixAll" }, diagnostics = {} },
         apply = true,
         async = false,
     })
@@ -101,7 +107,7 @@ vim.keymap.set("n", "<leader>cf", fixAll, { desc = "Fix All" })
 -- Organize imports with <leader>co
 local function organizeImports()
     vim.lsp.buf.code_action({
-        context = { only = { "source.organizeImports" } },
+        context = { only = { "source.organizeImports" }, diagnostics = {} },
         apply = true,
         async = false,
     })
@@ -270,3 +276,15 @@ vim.api.nvim_set_keymap(
     ':TOhtml<CR>:w! ' .. tmp_file .. '<CR>:silent !' .. open_cmd .. ' ' .. tmp_file .. '<CR>:bd!<CR>',
     { noremap = true, silent = true }
 )
+
+-- Replace word / current selection with leader s
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+    { desc = "Substitute occurences of current word" })
+vim.keymap.set("x", "<leader>s", function()
+    vim.cmd('normal! "zy')
+    local selection = vim.fn.getreg('z')
+    local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
+    local cmd = string.format("%%s/%s/%s/gI", escaped_selection, escaped_selection)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
+end)

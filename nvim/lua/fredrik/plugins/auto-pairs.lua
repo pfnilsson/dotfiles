@@ -18,7 +18,7 @@ return {
 
         -- Treesitter integration for nvim-autopairs (Optional)
         local npairs = require('nvim-autopairs')
-        local ts_conds = require('nvim-autopairs.ts-conds')
+        require('nvim-autopairs.ts-conds')
 
         npairs.setup {
             check_ts = true,

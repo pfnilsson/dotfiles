@@ -30,7 +30,7 @@ return {
             underline = true,
             update_in_insert = false,
             severity_sort = true,
-            float = { border = "rounded", source = "always" },
+            float = { border = "rounded", source = true },
         })
 
         -- Create an autocommand for LSP attachment to set keybindings
