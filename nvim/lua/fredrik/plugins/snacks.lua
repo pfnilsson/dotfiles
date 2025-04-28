@@ -119,7 +119,7 @@ return {
                         focus = "list",
                         auto_close = true,
                         jump = { close = true },
-                        layout = { preset = "sidebar", preview = false, layout = { width = 65 } },
+                        layout = { preset = "sidebar", preview = false, layout = { width = 0.4 } },
                         formatters = {
                             file = { filename_only = true },
                             severity = { pos = "right" },
