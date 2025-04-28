@@ -167,6 +167,9 @@ vim.keymap.set('n', '<leader>ap', ":%delete _<CR>:0put \"<CR>", { noremap = true
 -- <leader>aP to paste over entire buffer from system clipboard
 vim.keymap.set('n', '<leader>aP', ":%delete _<CR>:0put +<CR>", { noremap = true, silent = true })
 
+-- <leader>av to select entire buffer
+vim.keymap.set('n', '<leader>av', 'ggVG', { noremap = true, silent = true })
+
 -- Remap V to v$h
 vim.keymap.set("n", "V", "v$h", { noremap = true, silent = true })
 
