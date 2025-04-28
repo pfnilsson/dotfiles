@@ -7,7 +7,7 @@ return {
             suggestion = {
                 auto_trigger = false,
                 keymap = {
-                    accept = "<C-y>",
+                    accept = "<C-u>",
                     next = "<C-n>",
                     prev = "<C-p>"
                 }
