@@ -145,6 +145,9 @@ vim.keymap.set({ "n", "v" }, "<leader>D", "\"_d")
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+y$]])
 
+-- <leader>C to copy from neovim clipboard to system clipboard
+vim.keymap.set('n', '<leader>C', function() vim.fn.setreg('+', vim.fn.getreg('"')) end, { noremap = true, silent = true })
+
 -- <leader>p/P to paste from system clipboard
 vim.keymap.set({ "n", "x" }, "<leader>p", [["+p]])
 vim.keymap.set("n", "<leader>P", '"+]p')
@@ -291,3 +294,30 @@ vim.keymap.set("x", "<leader>s", function()
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
 end)
+
+-- <leader>ce to copy latest neovim message to system clipboard. If a diagnostic popup is open, copy its content instead.
+vim.keymap.set("n", "<leader>ce", function()
+    local row = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local diags = vim.diagnostic.get(0, { lnum = row })
+    local last = ""
+    local note = "Copied last message"
+
+    if #diags > 0 then
+        last = diags[#diags].message
+        note = "Copied diagnostic message"
+    else
+        local msgs  = vim.fn.execute("messages")
+        local lines = vim.split(msgs, "\n", { plain = true })
+        for i = #lines, 1, -1 do
+            if lines[i]:match("%S") then
+                last = lines[i]
+                break
+            end
+        end
+    end
+
+    -- yank into system clipboard
+    vim.fn.setreg("+", last)
+    -- context-sensitive confirmation
+    vim.notify(note, vim.log.levels.INFO)
+end, { noremap = true, silent = true , desc = "Copy last message or diagnostic popup" })
