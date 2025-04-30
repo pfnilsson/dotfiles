@@ -295,29 +295,28 @@ vim.keymap.set("x", "<leader>s", function()
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
 end)
 
--- <leader>ce to copy latest neovim message to system clipboard. If a diagnostic popup is open, copy its content instead.
+-- <leader>ce to copy :messages to system clipboard. If a diagnostic popup is open, copy its content instead.
 vim.keymap.set("n", "<leader>ce", function()
-    local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-    local diags = vim.diagnostic.get(0, { lnum = row })
-    local last = ""
-    local note = "Copied last message"
-
-    if #diags > 0 then
-        last = diags[#diags].message
-        note = "Copied diagnostic message"
-    else
-        local msgs  = vim.fn.execute("messages")
-        local lines = vim.split(msgs, "\n", { plain = true })
-        for i = #lines, 1, -1 do
-            if lines[i]:match("%S") then
-                last = lines[i]
-                break
-            end
+    local diag_lines = {}
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local ok, config = pcall(vim.api.nvim_win_get_config, win)
+        if ok and config.relative and config.relative ~= "" then
+            local buf = vim.api.nvim_win_get_buf(win)
+            diag_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+            break
         end
     end
 
-    -- yank into system clipboard
-    vim.fn.setreg("+", last)
-    -- context-sensitive confirmation
-    vim.notify(note, vim.log.levels.INFO)
-end, { noremap = true, silent = true , desc = "Copy last message or diagnostic popup" })
+    if #diag_lines > 0 then
+        vim.fn.setreg("+", table.concat(diag_lines, "\n"))
+        vim.notify("Copied diagnostic window", vim.log.levels.INFO)
+        return
+    end
+
+    vim.cmd('redir @+ | silent! messages | redir END')
+    vim.notify("Copied entire :messages history", vim.log.levels.INFO)
+end, {
+    noremap = true,
+    silent  = true,
+    desc    = "Copy diagnostic popup or full messages log",
+})
