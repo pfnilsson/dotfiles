@@ -39,3 +39,6 @@ vim.opt.termguicolors = true
 
 -- update every 50ms instead of default 4000ms
 vim.opt.updatetime = 50
+
+-- use single statusline
+vim.opt.laststatus = 3
