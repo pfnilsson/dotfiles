@@ -1,6 +1,30 @@
+# Cursors
+CURSOR_BLOCK=$'\e[2 q'
+CURSOR_BAR=$'\e[6 q'
+
+# ─────────────────────────────────────────────────────────────
+# 1) make Esc → normal-mode timeout razor-sharp
+# ─────────────────────────────────────────────────────────────
+# wait only 10 ms for any bytes after ESC
+KEYTIMEOUT=1
+
+# ─────────────────────────────────────────────────────────────
+# 2) explicit arrow-keys in insert-mode for history
+# ─────────────────────────────────────────────────────────────
+# CSI-style
+bindkey -M viins '^[[A' up-line-or-history
+bindkey -M viins '^[[B' down-line-or-history
+# SS3-style (some terminals send these in application mode)
+bindkey -M viins '^[OA' up-line-or-history
+bindkey -M viins '^[OB' down-line-or-history
+# (optional left/right if you ever need them)
+bindkey -M viins '^[[C' forward-char
+bindkey -M viins '^[[D' backward-char
+bindkey -M viins '^[OC' forward-char
+bindkey -M viins '^[OD' backward-char
 # Use vi mode
 bindkey -v
-
+ 
 # Binds shift-2 to first non blank
 bindkey -M vicmd '"' vi-first-non-blank
 
@@ -27,6 +51,88 @@ function vi-visual-whole-line() {
 zle -N vi-visual-whole-line
 bindkey -M vicmd 'vv' vi-visual-whole-line
 
+# detect clipboard commands
+if   command -v xclip >/dev/null 2>&1; then
+  CLIP_IN='xclip -in -selection clipboard'
+  CLIP_OUT='xclip -out -selection clipboard'
+elif command -v xsel >/dev/null 2>&1; then
+  CLIP_IN='xsel --clipboard --input'
+  CLIP_OUT='xsel --clipboard --output'
+elif command -v pbcopy >/dev/null 2>&1 && command -v pbpaste >/dev/null 2>&1; then
+  CLIP_IN='pbcopy'
+  CLIP_OUT='pbpaste'
+else
+  echo "⚠️ No clipboard tool found. Install xclip, xsel, or (on macOS) pbcopy/pbpaste." >&2
+fi
+
+# Paste before cursor (P) and after cursor (p)
+zle_paste_before() {
+  local head=${BUFFER[1,CURSOR]}
+  local tail=${BUFFER[CURSOR+1,-1]}
+  local paste=$($CLIP_OUT)
+  BUFFER=$head$paste$tail
+  CURSOR=$(( CURSOR + ${#paste} - 1 ))
+  zle reset-prompt
+}
+zle -N zle_paste_before
+bindkey -M vicmd 'P' zle_paste_before
+
+zle_paste_after() {
+  local head=${BUFFER[1,CURSOR+1]}
+  local tail=${BUFFER[CURSOR+2,-1]}
+  local paste=$($CLIP_OUT)
+  BUFFER=$head$paste$tail
+  CURSOR=$(( CURSOR + ${#paste} ))
+  zle reset-prompt
+}
+zle -N zle_paste_after
+bindkey -M vicmd 'p' zle_paste_after
+
+# Yank (yy)
+zle_yank_line() {
+  print -rn -- "$BUFFER" | $CLIP_IN
+  zle reset-prompt
+}
+zle -N zle_yank_line
+bindkey -M vicmd 'yy' zle_yank_line
+
+# Kill (dd)
+zle_kill_line() {
+  zle_yank_line
+  BUFFER=''
+  CURSOR=0
+  zle reset-prompt
+}
+zle -N zle_kill_line
+bindkey -M vicmd 'dd' zle_kill_line
+
+# cursor per vi mode
+
+# get the real arrow‐key sequences from terminfo
+local KU="${terminfo[kcuu1]}"   # Up
+local KD="${terminfo[kcud1]}"   # Down
+local KL="${terminfo[kcub1]}"   # Left
+local KR="${terminfo[kcuf1]}"   # Right
+
+# in insert mode, use arrows for history and cursor movements
+bindkey -M viins "$KU" up-line-or-history
+bindkey -M viins "$KD" down-line-or-history
+bindkey -M viins "$KL" backward-char
+bindkey -M viins "$KR" forward-char
+
+# only define/register if running under ZLE
+if [[ -o interactive ]]; then
+  zle_keymap_select() {
+    if [[ $KEYMAP == vicmd ]]; then
+      printf '%s' "$CURSOR_BLOCK" > /dev/tty
+    else
+      printf '%s' "$CURSOR_BAR"   > /dev/tty
+    fi
+  }
+
+  zle -N zle-keymap-select zle_keymap_select
+  zle -N zle-line-init     zle_keymap_select
+fi
 # Pretty json output from curl
 curljq() {
   output=$(curl -sS "$@")

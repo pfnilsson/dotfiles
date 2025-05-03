@@ -13,7 +13,7 @@ M.current = nil -- index of last opened note
 M.win_id  = nil -- floating window ID
 
 -- Forward declarations
-local create_buf, show_buf, buf_keymaps, save_all, get_note_buf, update_quickmaps, rescan_notes, next_prefix
+local create_buf, show_buf, buf_keymaps, get_note_buf, update_quickmaps, rescan_notes, next_prefix
 
 -- Highlight setup
 local nf  = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
@@ -136,12 +136,16 @@ function show_buf(buf)
 end
 
 -- Save all open note buffers back to disk
-function save_all()
+local function save_all()
     for _, note in ipairs(M.notes) do
         if note.buf and vim.api.nvim_buf_is_loaded(note.buf) then
-            local lines = vim.api.nvim_buf_get_lines(note.buf, 0, -1, false)
-            vim.fn.writefile(lines, note.path)
-            vim.api.nvim_buf_set_option(note.buf, "modified", false)
+            -- switch into the buffer’s context so that `:write` uses its name
+            vim.api.nvim_buf_call(note.buf, function()
+                -- write without triggering file-changed warnings or autocommands
+                vim.cmd('noautocmd silent! write!')
+                -- mark the buffer as clean
+                vim.api.nvim_buf_set_option(0, 'modified', false)
+            end)
         end
     end
 end
@@ -176,7 +180,7 @@ function buf_keymaps(buf)
     vim.keymap.set('n', '<leader>tn', M.next, opts)
     vim.keymap.set('n', '<leader>tp', M.prev, opts)
     vim.keymap.set('n', '<leader>w', '<cmd>write!<CR>', opts)
-    vim.keymap.set('n', '<leader>d', M.delete_current, opts)
+    vim.keymap.set('n', '<leader>D', M.delete_current, opts)
 end
 
 -- Delete current note and renumber remains

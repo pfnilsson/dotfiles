@@ -209,7 +209,6 @@ end
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true, desc = "Toggle Quickfix list" })
 
 -- some go boiler plate help
-
 -- <leader>ee to insert if err != nil { return err } block (for go)
 vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
     { desc = "Insert if err != nil {return err}" })
@@ -286,7 +285,9 @@ vim.api.nvim_set_keymap(
 -- Replace word / current selection with leader s
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "Substitute occurences of current word" })
-vim.keymap.set("x", "<leader>s", function()
+
+-- Replace visual selection in buffer with ledaer sf
+vim.keymap.set("x", "<leader>sf", function()
     vim.cmd('normal! "zy')
     local selection = vim.fn.getreg('z')
     local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
@@ -294,6 +295,17 @@ vim.keymap.set("x", "<leader>s", function()
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
 end)
+
+-- Search and replace whole repo with leader sr
+vim.keymap.set('x', '<leader>sr', function()
+    vim.cmd('normal! "zy')
+    local selection = vim.fn.getreg('z')
+    local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
+    vim.cmd('args % `grep -Rl ' .. escaped_selection .. '`')
+    local cmd = "argdo %s/" .. escaped_selection .. "//gc | update"
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 12), true, false, true), "n", false)
+end, { desc = 'Git-repo wide replace: use visual selection as search, confirm each match' })
 
 -- <leader>ce to copy :messages to system clipboard. If a diagnostic popup is open, copy its content instead.
 vim.keymap.set("n", "<leader>ce", function()
