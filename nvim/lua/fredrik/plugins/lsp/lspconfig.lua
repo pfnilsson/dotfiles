@@ -15,6 +15,13 @@ return {
         local mason_lspconfig = require("mason-lspconfig")
         local blink_cmp = require("blink.cmp")
         local secrets = require("fredrik.load_secrets")
+        local float_cfg = {
+            border     = "rounded",
+            focusable  = false,
+            winblend   = 10, -- 0 = opaque, 100 = invisible
+            max_width  = 80,
+            max_height = 20,
+        }
 
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
