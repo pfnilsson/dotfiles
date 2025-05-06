@@ -41,6 +41,7 @@ return {
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,
                     { buffer = ev.buf, silent = true, desc = "Smart rename" })
             end,
+
         })
 
         -- Disable hover for Ruff in favor of Pyright
@@ -61,6 +62,9 @@ return {
 
         -- Enhance capabilities for autocompletion
         local capabilities = blink_cmp.get_lsp_capabilities()
+
+        -- disable snippet-support
+        capabilities.textDocument.completion.completionItem.snippetSupport = false
 
         -- Setup Mason LSP configurations with custom handlers
         mason_lspconfig.setup_handlers({

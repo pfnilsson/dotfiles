@@ -282,30 +282,37 @@ vim.api.nvim_set_keymap(
     { noremap = true, silent = true }
 )
 
--- Replace word / current selection with leader s
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+-- Replace word / current selection with <leader>s
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]],
     { desc = "Substitute occurences of current word" })
 
--- Replace visual selection in buffer with ledaer sf
-vim.keymap.set("x", "<leader>sf", function()
+-- Replace visual selection in buffer with <leader>s
+vim.keymap.set("x", "<leader>s", function()
     vim.cmd('normal! "zy')
     local selection = vim.fn.getreg('z')
     local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
-    local cmd = string.format("%%s/%s/%s/gI", escaped_selection, escaped_selection)
+    local cmd = string.format("%%s/%s/%s/gc", escaped_selection, escaped_selection)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
 end)
 
--- Search and replace whole repo with leader sr
-vim.keymap.set('x', '<leader>sr', function()
+-- Search and replace whole repo with <leader>S
+vim.keymap.set('x', '<leader>S', function()
     vim.cmd('normal! "zy')
     local selection = vim.fn.getreg('z')
     local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
-    vim.cmd('args % `grep -Rl ' .. escaped_selection .. '`')
-    local cmd = "argdo %s/" .. escaped_selection .. "//gc | update"
+    local files = vim.fn.systemlist('rg -l ' .. escaped_selection)
+
+    local items = {}
+    for _, filename in ipairs(files) do
+        table.insert(items, { filename = filename, lnum = 1, col = 1, text = "" })
+    end
+    vim.fn.setqflist({}, ' ', { title = 'Repo-replace', items = items })
+
+    local cmd = "cfdo %s/" .. escaped_selection .. "/" .. escaped_selection .. "/gc | update"
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 12), true, false, true), "n", false)
-end, { desc = 'Git-repo wide replace: use visual selection as search, confirm each match' })
+end, { desc = 'Repo wide replace: use visual selection as search, confirm each match' })
 
 -- <leader>ce to copy :messages to system clipboard. If a diagnostic popup is open, copy its content instead.
 vim.keymap.set("n", "<leader>ce", function()
@@ -332,3 +339,7 @@ end, {
     silent  = true,
     desc    = "Copy diagnostic popup or full messages log",
 })
+
+-- Keep visual selection when indenting in visual mode
+vim.keymap.set('x', '>', '>gv', { noremap = true })
+vim.keymap.set('x', '<', '<gv', { noremap = true })

@@ -192,7 +192,7 @@ function gazelle() {
 
 # Bazel aliases
 alias brg="gazelle"
-alias btd="bazel test //nodes/decision-systems/... --test_output=errors"
+alias btd="bazel test //nodes/decisionsystems/... --test_output=errors"
 alias bmt="bazel run //:go -- mod tidy -e"
 
 # Colorize ls
