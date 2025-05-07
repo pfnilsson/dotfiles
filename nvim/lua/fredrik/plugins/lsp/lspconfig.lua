@@ -12,16 +12,8 @@ return {
     config = function()
         -- Import required plugins
         local lspconfig = require("lspconfig")
-        local mason_lspconfig = require("mason-lspconfig")
         local blink_cmp = require("blink.cmp")
         local secrets = require("fredrik.load_secrets")
-        local float_cfg = {
-            border     = "rounded",
-            focusable  = false,
-            winblend   = 10, -- 0 = opaque, 100 = invisible
-            max_width  = 80,
-            max_height = 20,
-        }
 
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
@@ -73,113 +65,106 @@ return {
         -- disable snippet-support
         capabilities.textDocument.completion.completionItem.snippetSupport = false
 
+        -- update default capabilites
+        lspconfig.util.default_config = vim.tbl_extend("force",
+            lspconfig.util.default_config,
+            { capabilities = capabilities }
+        )
+
         -- Setup Mason LSP configurations with custom handlers
-        mason_lspconfig.setup_handlers({
-            -- Default handler for all servers
-            function(server_name)
-                lspconfig[server_name].setup({
-                    capabilities = capabilities,
-                })
-            end,
 
-            -- Handler for lua_ls with specific settings
-            ["lua_ls"] = function()
-                lspconfig["lua_ls"].setup({
-                    capabilities = capabilities,
-                    settings = {
-                        Lua = {
-                            diagnostics = {
-                                globals = { "vim" },
-                            },
-                            completion = {
-                                callSnippet = "Replace",
-                            },
-                        },
+        -- Handler for lua_ls with specific settings
+        lspconfig.lua_ls.setup({
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { "vim" },
                     },
-                })
-            end,
-
-            -- Handler for basedpyright with Ruff integration
-            ["basedpyright"] = function()
-                lspconfig["basedpyright"].setup({
-                    capabilities = capabilities,
-                    settings = {
-                        basedpyright = {
-                            disableOrganizeImports = true,
-                            analysis = {
-                                typeCheckingMode = "standard",
-                                autoSearchPaths = true,
-                                useLibraryCodeForTypes = true,
-                                diagnosticsMode = "openFilesOnly",
-                                autoImportCompletions = true,
-                                diagnosticSeverityOverrides = {
-                                    autoSearchPaths = true,
-                                    enableTypeIgnoreComments = false,
-                                    reportPossiblyUnboundVariable = false,
-                                }
-                            }
-                        },
-                    }
-                })
-            end,
-            ["gopls"] = function()
-                lspconfig["gopls"].setup({
-                    capabilities = capabilities,
-                    root_dir = function(fname)
-                        local util = require("lspconfig.util")
-
-                        -- If we find a WORKSPACE in the ancestry, prefer that (typical Bazel approach).
-                        local root = util.root_pattern("WORKSPACE", "WORKSPACE.bzlmod")(fname)
-
-                        if root then
-                            return root
-                        end
-
-                        if fname:find("^" .. secrets.repo_path) or fname:find(secrets.cache_path) then
-                            return strip_trailing_slash(secrets.repo_path)
-                        end
-
-                        -- Fallback: if not recognized as a Bazel path, use normal approach
-                        return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
-                    end,
-                    on_new_config = function(new_config, root_dir)
-                        if strip_trailing_slash(root_dir) == strip_trailing_slash(secrets.repo_path) then
-                            new_config.cmd_env = vim.tbl_extend("force", new_config.cmd_env or {}, {
-                                GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
-                                GOROOT = secrets.repo_path .. secrets.go_root
-                            })
-                        end
-                    end,
-                    settings = {
-                        gopls = {
-                            directoryFilters = {
-                                "-bazel-bin",
-                                "-bazel-out",
-                                "-bazel-testlogs",
-                                secrets.bazel_dir_filter,
-                            },
-                            analyses         = {
-                                unusedparams = true,
-                                unusedwrite = true,
-                            },
-                            staticcheck      = true,
-                            gofumpt          = true,
-                            ["local"]        = secrets.local_import_path,
-                            usePlaceholders  = true,
-                            semanticTokens   = true,
-                            codelenses       = {
-                                gc_details = false,
-                                regenerate_cgo = false,
-                                generate = false,
-                                test = false,
-                                tidy = false,
-                                upgrade_dependency = false,
-                                vendor = false,
-                            },
-                        },
+                    completion = {
+                        callSnippet = "Replace",
                     },
-                })
-            end,
+                },
+            },
         })
+
+        -- Handler for basedpyright with Ruff integration
+        lspconfig.basedpyright.setup({
+            capabilities = capabilities,
+            settings = {
+                basedpyright = {
+                    disableOrganizeImports = true,
+                    analysis = {
+                        typeCheckingMode = "standard",
+                        autoSearchPaths = true,
+                        useLibraryCodeForTypes = true,
+                        diagnosticsMode = "openFilesOnly",
+                        autoImportCompletions = true,
+                        diagnosticSeverityOverrides = {
+                            autoSearchPaths = true,
+                            enableTypeIgnoreComments = false,
+                            reportPossiblyUnboundVariable = false,
+                        }
+                    }
+                },
+            }
+        })
+        lspconfig.gopls.setup({
+            capabilities = capabilities,
+            root_dir = function(fname)
+                local util = require("lspconfig.util")
+
+                -- If we find a WORKSPACE in the ancestry, prefer that (typical Bazel approach).
+                local root = util.root_pattern("WORKSPACE", "WORKSPACE.bzlmod")(fname)
+
+                if root then
+                    return root
+                end
+
+                if fname:find("^" .. secrets.repo_path) or fname:find(secrets.cache_path) then
+                    return strip_trailing_slash(secrets.repo_path)
+                end
+
+                -- Fallback: if not recognized as a Bazel path, use normal approach
+                return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
+            end,
+            on_new_config = function(new_config, root_dir)
+                if strip_trailing_slash(root_dir) == strip_trailing_slash(secrets.repo_path) then
+                    new_config.cmd_env = vim.tbl_extend("force", new_config.cmd_env or {}, {
+                        GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
+                        GOROOT = secrets.repo_path .. secrets.go_root
+                    })
+                end
+            end,
+            settings = {
+                gopls = {
+                    directoryFilters = {
+                        "-bazel-bin",
+                        "-bazel-out",
+                        "-bazel-testlogs",
+                        secrets.bazel_dir_filter,
+                    },
+                    analyses         = {
+                        unusedparams = true,
+                        unusedwrite = true,
+                    },
+                    staticcheck      = true,
+                    gofumpt          = true,
+                    ["local"]        = secrets.local_import_path,
+                    usePlaceholders  = true,
+                    semanticTokens   = true,
+                    codelenses       = {
+                        gc_details = false,
+                        regenerate_cgo = false,
+                        generate = false,
+                        test = false,
+                        tidy = false,
+                        upgrade_dependency = false,
+                        vendor = false,
+                    },
+                },
+            },
+        }
+        )
     end,
 }
