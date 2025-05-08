@@ -188,6 +188,7 @@ return {
             lazygit = {},
             explorer = {},
             picker = {
+                ui_select = true,
                 layout = { preset = "default" },
                 layouts = {
                     vertical = {

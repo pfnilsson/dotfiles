@@ -13,7 +13,7 @@ return {
             ['<C-f>'] = { 'show_signature', 'hide_signature', 'fallback' },
             ['<C-y>'] = {},
             ['<C-n>'] = {},
-            ['<C-p>'] = {}
+            ['<C-p>'] = {},
         },
 
         appearance = {

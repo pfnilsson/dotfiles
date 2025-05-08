@@ -47,6 +47,7 @@ return {
                 "pylint",
                 "eslint_d",
                 "delve",
+                "copilot-language-server"
             },
         })
     end,

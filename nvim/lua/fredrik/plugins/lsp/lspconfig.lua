@@ -15,6 +15,12 @@ return {
         local blink_cmp = require("blink.cmp")
         local secrets = require("fredrik.load_secrets")
 
+        require("neodev").setup({
+            library = {
+                plugincs = true,
+                types = true,
+            }
+        })
         -- Inline Diagnostic Configuration
         vim.diagnostic.config({
             virtual_text = { prefix = '●' },
