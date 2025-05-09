@@ -7,36 +7,22 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
         { "antosha417/nvim-lsp-file-operations", config = true },
-        { "folke/neodev.nvim",                   opts = {} },
+        {
+            "folke/lazydev.nvim",
+            ft = "lua", -- only load on lua files
+            opts = {
+                library = {
+                    -- Load luvit types when the `vim.uv` word is found
+                    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                },
+            },
+        },
     },
     config = function()
         -- Import required plugins
         local lspconfig = require("lspconfig")
         local blink_cmp = require("blink.cmp")
         local secrets = require("fredrik.load_secrets")
-
-        require("neodev").setup({
-            library = {
-                plugincs = true,
-                types = true,
-            }
-        })
-        -- Inline Diagnostic Configuration
-        vim.diagnostic.config({
-            virtual_text = { prefix = '●' },
-            signs = {
-                active = {
-                    { name = "DiagnosticSignError", text = "✗" },
-                    { name = "DiagnosticSignWarn", text = "!" },
-                    { name = "DiagnosticSignHint", text = "➤" },
-                    { name = "DiagnosticSignInfo", text = "I" },
-                },
-            },
-            underline = true,
-            update_in_insert = false,
-            severity_sort = true,
-            float = { border = "rounded", source = true },
-        })
 
         -- Create an autocommand for LSP attachment to set keybindings
         vim.api.nvim_create_autocmd("LspAttach", {
