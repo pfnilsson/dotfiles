@@ -85,6 +85,22 @@ return {
                         unloaded = true,
                         current = true,
                         sort_lastused = true,
+                        -- Fiter out notes and unnamed buffers
+                        filter = {
+                            filter = function(item)
+                                local name = item.file:match("([^/\\]+)$")
+
+                                if name:match("^%[No Name") then
+                                    return false
+                                end
+
+                                if name:match("^%d%d_.*%.txt$") then
+                                    return false
+                                end
+
+                                return true
+                            end,
+                        },
                         win = {
                             input = { keys = { ["<C-d>"] = { "bufdelete", mode = { "n", "i" } }, }, },
                             list = { keys = { ["<C-d>"] = { "bufdelete", mode = { "n", "i" } } } },
@@ -215,10 +231,10 @@ return {
                     input = {
                         keys = {
                             ["<Esc>"] = { "close", mode = { "n", "i" } },
-                            ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
-                            ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
-                            ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
-                            ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+                            ["J"] = { "preview_scroll_down", mode = { "n" } },
+                            ["K"] = { "preview_scroll_up", mode = { "n" } },
+                            ["H"] = { "preview_scroll_left", mode = { "n" } },
+                            ["L"] = { "preview_scroll_right", mode = { "n" } },
                             ["<C-c>"] = { function() vim.cmd.stopinsert() end, mode = { "i", "n" } }
                         },
                     },

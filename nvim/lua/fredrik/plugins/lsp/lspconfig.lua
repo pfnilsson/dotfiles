@@ -17,6 +17,7 @@ return {
                 },
             },
         },
+        { "folke/snacks.nvim" },
     },
     config = function()
         -- Import required plugins

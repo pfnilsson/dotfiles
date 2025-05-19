@@ -1235,7 +1235,8 @@
                                             "^co\\.zeit\\.hyper$",
                                             "^io\\.alacritty$",
                                             "^net\\.kovidgoyal\\.kitty$",
-                                            "^tv\\.parsec\\.www$"
+                                            "^tv\\.parsec\\.www$",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -2579,14 +2580,14 @@
                         ]
                     },
                     {
-                        "description": "Print Screen => Cmd+Shift+9 (Lightshot Screen Capture)",
+                        "description": "Print Screen => Ctrl+Shift+Cmd+4 (Lightshot Screen Capture)",
                         "manipulators": [
                             {
                                 "from": { "key_code": "print_screen" },
                                 "to": [
                                     {
                                         "key_code": "4",
-                                        "modifiers": ["left_command", "left_shift"]
+                                        "modifiers": ["left_control", "left_shift", "left_command"]
                                     }
                                 ],
                                 "type": "basic"
