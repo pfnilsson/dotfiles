@@ -30,7 +30,7 @@ return {
                     init_selection = "<C-h>",
                     node_incremental = "<C-h>",
                     scope_incremental = false,
-                    node_decremental = "<C-H>",
+                    node_decremental = "<bs>",
                 },
             },
             modules = {},

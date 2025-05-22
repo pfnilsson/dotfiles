@@ -21,8 +21,8 @@ return {
                     return '<Ignore>'
                 end, { expr = true })
 
-                vim.keymap.set('n', 'Åc', function()
-                    if vim.wo.diff then return 'Åc' end
+                vim.keymap.set('n', 'ÅC', function()
+                    if vim.wo.diff then return 'ÅC' end
                     vim.schedule(function() gs.prev_hunk() end)
                     return '<Ignore>'
                 end, { expr = true })

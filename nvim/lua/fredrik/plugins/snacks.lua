@@ -184,6 +184,7 @@ return {
             }
         },
         opts = {
+            input = { enable = true },
             gitbrowse = {
                 open = function(url)
                     local mode = vim.fn.mode()
