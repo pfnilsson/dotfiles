@@ -53,28 +53,7 @@ return {
                 end, },
             desc = "Find Files (All)",
             { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
-            {
-                "<leader>fg",
-                function()
-                    if _G.git_cache == true then
-                        Snacks.picker.grep(
-                            {
-                                finder = "git_grep",
-                                format = "file",
-                                untracked = true,
-                                need_search = true,
-                                show_empty = true,
-                                supports_live = true,
-                                live = true,
-                            }
-                        )
-                    else
-                        Snacks.picker.grep()
-                    end
-                end,
-                desc = "Grep (Git Preferred)"
-            },
-            { "<leader>fG", function() Snacks.picker.grep() end,     desc = "Grep (All)" },
+            { "<leader>fg", function() Snacks.picker.grep() end,     desc = "Grep" },
             {
                 "<leader>b",
                 function()
