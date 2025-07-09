@@ -1,12 +1,6 @@
 return {
     {
         "folke/snacks.nvim",
-        init = function()
-            vim.defer_fn(function()
-                local result = vim.fn.systemlist('git rev-parse --is-inside-work-tree 2> /dev/null')
-                _G.git_cache = (result[1] == 'true')
-            end, 0)
-        end,
         keys = {
             { "<leader>gx", function() Snacks.gitbrowse.open() end, mode = { "n", "v" } },
             { "<leader>lg", function() Snacks.lazygit.open() end },
@@ -27,22 +21,7 @@ return {
             { "<leader>gs", function() Snacks.picker.git_status() end,                         desc = "Git Status" },
             { "<leader>km", function() Snacks.picker.keymaps({ layout = "vertical", }) end,    desc = "Keymaps", },
             {
-                "<leader>ff",
-                function()
-                    if _G.git_cache == true then
-                        Snacks.picker.git_files()
-                    else
-                        Snacks.picker.files({
-                            finder = "files",
-                            format = "file",
-                            show_empty = true,
-                            supports_live = true,
-                        })
-                    end
-                end,
-                desc = "Find Files (Git Preferred)"
-            },
-            { "<leader>fF",
+                "<leader><space>",
                 function()
                     Snacks.picker.files({
                         finder = "files",
@@ -50,10 +29,11 @@ return {
                         show_empty = true,
                         supports_live = true,
                     })
-                end, },
-            desc = "Find Files (All)",
+                end,
+                desc = "Find Files"
+            },
             { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
-            { "<leader>fg", function() Snacks.picker.grep() end,     desc = "Grep" },
+            { "<leader>f",  function() Snacks.picker.grep() end,     desc = "Grep" },
             {
                 "<leader>b",
                 function()

@@ -146,6 +146,9 @@ if [[ -o interactive ]]; then
   zle -N zle-line-init     zle_keymap_select
 fi
 
+# enable backspace in insert mode
+bindkey -M viins '^?' backward-delete-char
+
 # Pretty json output from curl
 curljq() {
   output=$(curl -sS "$@")
@@ -188,15 +191,13 @@ eval "$(jenv init -)"
 function gazelle() {
   if bazel run //:gazelle -- "$@"; then
     local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
-    # Check if Neovim is running and listening at the computed socket.
+    # Check if Neovim is running on that socket
     if nvr --servername "$socket" --nostart --remote-expr "v:true" &>/dev/null; then
-      # Restart gopls if it's running inside the found Neovim instance.
-      nvr --servername "$socket" --nostart -c \
-        "lua for _,c in pairs(vim.lsp.get_clients()) do if c.name=='gopls' then vim.cmd('LspRestart gopls') break end end" \
-        || true
-      echo "✅ gopls restarted via Neovim remote"
+      # Invoke your custom :GoplsRestart in the remote Neovim
+      nvr --servername "$socket" --nostart -c "GoplsRestart" || true
+      echo "✅ gopls restarted via :GoplsRestart"
     else
-      echo "⚠️ Neovim is not running or not listening at $socket"
+      echo "⚠️ Neovim isn’t running or listening at $socket"
     fi
   else
     echo "❌ gazelle failed"
@@ -205,7 +206,7 @@ function gazelle() {
 
 # Bazel aliases
 alias brg="gazelle"
-alias btd="bazel test //nodes/decisionsystems/... --test_output=errors"
+alias btd="bazel test //nodes/decisionsystems/... --test_output=errors --test_tag_filters="
 alias bmt="bazel run //:go -- mod tidy -e"
 
 # Colorize ls

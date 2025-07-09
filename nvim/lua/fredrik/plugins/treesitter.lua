@@ -4,7 +4,17 @@ return {
     build = ":TSUpdate",
     dependencies = {
         "nvim-treesitter/nvim-treesitter-context",
-        config = function() require("treesitter-context").setup({ enable = false }) end
+        config = function()
+            require("treesitter-context").setup({ enable = false })
+
+            vim.keymap.set("n", "<leader>t", function()
+                require("treesitter-context").toggle()
+            end, { desc = "Toggle Treesitter Context" })
+
+            vim.keymap.set("n", "<leader>T", function()
+                require("treesitter-context").go_to_context(vim.v.count1)
+            end, { silent = true })
+        end
     },
     config = function()
         require("nvim-treesitter.configs").setup({

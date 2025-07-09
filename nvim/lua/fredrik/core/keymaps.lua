@@ -253,9 +253,6 @@ vim.keymap.set("n", "<leader>cc", ":CopilotChatToggle<CR>", { desc = "Toggle Cop
 -- set alt_gr/right_option + the key left of backspace to toggle alternate buffer
 vim.keymap.set('n', '´', ':b#<CR>', { noremap = true, silent = true })
 
--- Toggle treesitter context
-vim.keymap.set('n', '<leader>ts', ':TSContextToggle<CR>')
-
 -- Quit with <leader>Q
 vim.keymap.set('n', '<leader>Q', ':q<CR>')
 
