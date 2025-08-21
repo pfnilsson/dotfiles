@@ -329,3 +329,9 @@ end, {
 -- Keep visual selection when indenting in visual mode
 vim.keymap.set('x', '>', '>gv', { noremap = true })
 vim.keymap.set('x', '<', '<gv', { noremap = true })
+
+-- Copy current relative file path to system clipboard
+vim.keymap.set('n', '<leader>cp', function()
+    local rel = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':.')
+    vim.fn.setreg('+', rel)
+end, { desc = "Copy file path relative to cwd to clipboard" })

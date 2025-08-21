@@ -127,11 +127,17 @@ return {
                         cfg.cmd_env = vim.tbl_extend("force", cfg.cmd_env or {}, {
                             GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
                             GOROOT           = secrets.repo_path .. secrets.go_root,
+                            GO111MODULE      = 'on',
                         })
                     end
                 end,
                 settings = {
                     gopls = {
+                        workspaceFiles   = {
+                            "**/BUILD",
+                            "**/WORKSPACE",
+                            "**/*.bazel"
+                        },
                         directoryFilters = {
                             "-bazel-bin", "-bazel-out", "-bazel-testlogs",
                             secrets.bazel_dir_filter,
@@ -155,66 +161,12 @@ return {
                 },
             })
         end
+
         setup_gopls()
+
         vim.api.nvim_create_user_command("GoplsRestart", function()
             setup_gopls()
             vim.cmd("LspRestart gopls")
         end, { desc = "Restart gopls and reload its full configuration" }) -- lspconfig.gopls.setup({
-        --     capabilities = capabilities,
-        --     root_dir = function(fname)
-        --         local util = require("lspconfig.util")
-
-        --         -- If we find a WORKSPACE in the ancestry, prefer that (typical Bazel approach).
-        --         local root = util.root_pattern("WORKSPACE", "WORKSPACE.bzlmod")(fname)
-
-        --         if root then
-        --             return root
-        --         end
-
-        --         if fname:find("^" .. secrets.repo_path) or fname:find(secrets.cache_path) then
-        --             return strip_trailing_slash(secrets.repo_path)
-        --         end
-
-        --         -- Fallback: if not recognized as a Bazel path, use normal approach
-        --         return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
-        --     end,
-        --     on_new_config = function(new_config, root_dir)
-        --         if strip_trailing_slash(root_dir) == strip_trailing_slash(secrets.repo_path) then
-        --             new_config.cmd_env = vim.tbl_extend("force", new_config.cmd_env or {}, {
-        --                 GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
-        --                 GOROOT = secrets.repo_path .. secrets.go_root
-        --             })
-        --         end
-        --     end,
-        --     settings = {
-        --         gopls = {
-        --             directoryFilters = {
-        --                 "-bazel-bin",
-        --                 "-bazel-out",
-        --                 "-bazel-testlogs",
-        --                 secrets.bazel_dir_filter,
-        --             },
-        --             analyses         = {
-        --                 unusedparams = true,
-        --                 unusedwrite = true,
-        --             },
-        --             staticcheck      = true,
-        --             gofumpt          = true,
-        --             ["local"]        = secrets.local_import_path,
-        --             usePlaceholders  = true,
-        --             semanticTokens   = true,
-        --             codelenses       = {
-        --                 gc_details = false,
-        --                 regenerate_cgo = false,
-        --                 generate = false,
-        --                 test = false,
-        --                 tidy = false,
-        --                 upgrade_dependency = false,
-        --                 vendor = false,
-        --             },
-        --         },
-        --     },
-        -- }
-        -- )
     end,
 }

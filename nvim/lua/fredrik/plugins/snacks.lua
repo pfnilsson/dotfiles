@@ -1,6 +1,8 @@
 return {
     {
         "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
         keys = {
             { "<leader>gx", function() Snacks.gitbrowse.open() end, mode = { "n", "v" } },
             { "<leader>lg", function() Snacks.lazygit.open() end },
