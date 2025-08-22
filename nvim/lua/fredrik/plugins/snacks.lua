@@ -22,6 +22,7 @@ return {
             { "<leader>gb", function() Snacks.picker.git_branches({ layout = "select", }) end, desc = "Branches", },
             { "<leader>gs", function() Snacks.picker.git_status() end,                         desc = "Git Status" },
             { "<leader>km", function() Snacks.picker.keymaps({ layout = "vertical", }) end,    desc = "Keymaps", },
+            { "<leader>rr", function() Snacks.picker.resume() end,                             desc = "Resume last Snacks picker" },
             {
                 "<leader><space>",
                 function()
