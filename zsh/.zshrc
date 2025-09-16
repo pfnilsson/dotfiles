@@ -168,10 +168,6 @@ nvim() {
 # Start nvim with remote
 export NVIM_LISTEN_ADDRESS="/tmp/nvim.sock"
 
-# Languge specific grep shorthands
-alias grepy="grep -rn --include='*.py' --exclude-dir='*venv'"
-alias grepgo="grep -rn --include='*.go'"
-
 # Enable advanced tab-completion features in zsh
 autoload -Uz compinit && compinit
 

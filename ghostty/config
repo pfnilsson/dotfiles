@@ -9,7 +9,7 @@ font-feature = -calt
 font-feature = -dlig
 
 # set theme
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 
 # set color space
 window-colorspace = display-p3
