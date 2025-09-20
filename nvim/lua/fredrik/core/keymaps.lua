@@ -1,10 +1,10 @@
 -----------------------------------------------------------
 -- Leader Key Setup
 -----------------------------------------------------------
-vim.g.mapleader      = " "
+vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-local opts           = { noremap = true, silent = true }
+local opts = { noremap = true, silent = true }
 
 -- Disable <Space> as a key
 vim.keymap.set("n", "<Space>", "<Nop>", opts)
@@ -68,31 +68,35 @@ vim.keymap.set("n", "åi", function()
 end, { desc = "Go to next information" })
 
 -- Go to next blank line
-vim.keymap.set("n", "åb", function() vim.fn.search("^\\s*$", "W") end, { desc = "Next blank line" })
+vim.keymap.set("n", "åb", function()
+    vim.fn.search("^\\s*$", "W")
+end, { desc = "Next blank line" })
 
 -- Go to previous blank line
-vim.keymap.set("n", "ÅB", function() vim.fn.search("^\\s*$", "bW") end, { desc = "Previous blank line" })
+vim.keymap.set("n", "ÅB", function()
+    vim.fn.search("^\\s*$", "bW")
+end, { desc = "Previous blank line" })
 
 -- Next section
-vim.keymap.set({ 'n', 'x', 'o' }, 'åå', ']]', { desc = "Next section (åå)" })
+vim.keymap.set({ "n", "x", "o" }, "åå", "]]", { desc = "Next section (åå)" })
 
 -- Previous section
-vim.keymap.set({ 'n', 'x', 'o' }, 'ÅÅ', '[[', { desc = "Previous section (ÅÅ)" })
+vim.keymap.set({ "n", "x", "o" }, "ÅÅ", "[[", { desc = "Previous section (ÅÅ)" })
 
 -- Save the file
 vim.keymap.set("n", "<leader>w", ":write<CR>", { noremap = true, silent = true, desc = "Save File" })
-vim.keymap.set('n', '<leader>W', ':wa<CR>', { noremap = true, silent = true, desc = "Save All" })
+vim.keymap.set("n", "<leader>W", ":wa<CR>", { noremap = true, silent = true, desc = "Save All" })
 
 -- Remap End of Line to be Shift+4 like on a US keyboard layout
-vim.keymap.set({ 'n', 'v', 'o' }, '€', '$', { noremap = true, silent = true })
-vim.keymap.set({ 'n', 'v', 'o' }, '¤', '$', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v", "o" }, "€", "$", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v", "o" }, "¤", "$", { noremap = true, silent = true })
 
 -- Remap ^ to " to make it easier to press on a swedish keyboard
-vim.keymap.set({ 'n', 'v', 'o' }, '"', '^', { noremap = true, silent = true })
-vim.keymap.set('s', '"', '"', { noremap = true, silent = true }) -- explicitly bind back for SELECT mode
+vim.keymap.set({ "n", "v", "o" }, '"', "^", { noremap = true, silent = true })
+vim.keymap.set("s", '"', '"', { noremap = true, silent = true }) -- explicitly bind back for SELECT mode
 
 -- Remap ~ to § to use the same key as US keyboard
-vim.keymap.set({ 'n', 'v' }, '§', '~', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "§", "~", { noremap = true, silent = true })
 
 -- Fix all with <leader>cf
 local function fixAll()
@@ -139,14 +143,16 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- <leader>D delete into void registry
-vim.keymap.set({ "n", "v" }, "<leader>D", "\"_d")
+vim.keymap.set({ "n", "v" }, "<leader>D", '"_d')
 
 -- <leader>y/Y to yank to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+y$]])
 
 -- <leader>C to copy from neovim clipboard to system clipboard
-vim.keymap.set('n', '<leader>C', function() vim.fn.setreg('+', vim.fn.getreg('"')) end, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>C", function()
+    vim.fn.setreg("+", vim.fn.getreg('"'))
+end, { noremap = true, silent = true })
 
 -- <leader>p/P to paste from system clipboard
 vim.keymap.set({ "n", "x" }, "<leader>p", [["+p]])
@@ -159,19 +165,19 @@ vim.keymap.set("x", "<leader>P", [["_dP]])
 vim.keymap.set("n", "Y", "y$", { noremap = true, silent = true })
 
 -- <leader>ay to yank entire buffer
-vim.keymap.set('n', '<leader>ay', ':%yank<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>ay", ":%yank<CR>", { noremap = true, silent = true })
 
 -- <leader>aY to yank entire buffer to system clipboard
-vim.keymap.set('n', '<leader>aY', ':%yank +<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>aY", ":%yank +<CR>", { noremap = true, silent = true })
 
 -- <leader>ap to paste over entire buffer
-vim.keymap.set('n', '<leader>ap', ":%delete _<CR>:0put \"<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>ap", ':%delete _<CR>:0put "<CR>', { noremap = true, silent = true })
 
 -- <leader>aP to paste over entire buffer from system clipboard
-vim.keymap.set('n', '<leader>aP', ":%delete _<CR>:0put +<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>aP", ":%delete _<CR>:0put +<CR>", { noremap = true, silent = true })
 
 -- <leader>av to select entire buffer
-vim.keymap.set('n', '<leader>av', 'ggVG', { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>av", "ggVG", { noremap = true, silent = true })
 
 -- Remap V to v$h
 vim.keymap.set("n", "V", "v$h", { noremap = true, silent = true })
@@ -186,7 +192,7 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 
 -- C-l move right in insert mode
-vim.keymap.set('i', '<C-l>', '<Right>', { noremap = true, silent = true })
+vim.keymap.set("i", "<C-l>", "<Right>", { noremap = true, silent = true })
 
 -- Quickfix binds
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
@@ -197,27 +203,31 @@ local function toggle_quickfix()
     -- Iterate through all open windows
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
-        if vim.bo[buf].buftype == 'quickfix' then
+        if vim.bo[buf].buftype == "quickfix" then
             -- If Quickfix window is found, close it
             vim.api.nvim_win_close(win, true)
             return
         end
     end
     -- If Quickfix window is not open, open it
-    vim.cmd('copen')
+    vim.cmd("copen")
 end
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true, desc = "Toggle Quickfix list" })
 
 -- some go boiler plate help
 -- <leader>ee to insert if err != nil { return err } block (for go)
-vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
-    { desc = "Insert if err != nil {return err}" })
+vim.keymap.set(
+    "n",
+    "<leader>ee",
+    "oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
+    { desc = "Insert if err != nil {return err}" }
+)
 
 -- <leader>ef to insert if err != nil {log.Fatalf} block
 vim.keymap.set(
     "n",
     "<leader>ef",
-    "oif err != nil {<CR>}<Esc>Olog.Fatalf(\"Error: %v\\n\", err)<Esc>jj",
+    'oif err != nil {<CR>}<Esc>Olog.Fatalf("Error: %v\\n", err)<Esc>jj',
     { desc = "Insert if err != nil {log.Fatalf} block" }
 )
 
@@ -225,15 +235,15 @@ vim.keymap.set(
 vim.keymap.set(
     "n",
     "<leader>ew",
-    "oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf(\"%w\", err)<Esc>F\"hhi",
+    'oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf("%w", err)<Esc>F"hhi',
     { desc = "Insert if err != nil with wrapped return err" }
 )
 
 -- Rebind <C-o> since some plugin removes it
-vim.keymap.set('i', '<C-o>', '<C-o>', { noremap = true, silent = true })
+vim.keymap.set("i", "<C-o>", "<C-o>", { noremap = true, silent = true })
 
 -- <C-d> deletes a character to the right in insert mode (like <Del>)
-vim.keymap.set('i', '<C-d>', '<C-o>x', { noremap = true, silent = true })
+vim.keymap.set("i", "<C-d>", "<C-o>x", { noremap = true, silent = true })
 
 -- Disable arrows & delete
 local keys_to_disable = { "<Up>", "<Down>", "<Left>", "<Right>", "<Del>" }
@@ -247,14 +257,12 @@ end
 -- Escape removes search highlighting in normal mode
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
--- <leader>cc to toggle copilot chat
-vim.keymap.set("n", "<leader>cc", ":CopilotChatToggle<CR>", { desc = "Toggle Copilot Chat" })
-
 -- set alt_gr/right_option + the key left of backspace to toggle alternate buffer
-vim.keymap.set('n', '´', ':b#<CR>', { noremap = true, silent = true })
+-- even tho its S-F11 bound neovim interprets it as <F23>
+vim.keymap.set("n", "<F23>", ":b#<CR>", { noremap = true, silent = true })
 
 -- Quit with <leader>Q
-vim.keymap.set('n', '<leader>Q', ':q<CR>')
+vim.keymap.set("n", "<leader>Q", ":q<CR>")
 
 -- Open current buffer in browser
 local open_cmd = "xdg-open"
@@ -262,20 +270,24 @@ local tmp_file = "/tmp/neovim.html"
 
 -- Create a key mapping to convert the current buffer to HTML and open it in the browser.
 vim.api.nvim_set_keymap(
-    'n',
-    '<leader>cx',
-    ':TOhtml<CR>:w! ' .. tmp_file .. '<CR>:silent !' .. open_cmd .. ' ' .. tmp_file .. '<CR>:bd!<CR>',
+    "n",
+    "<leader>cx",
+    ":TOhtml<CR>:w! " .. tmp_file .. "<CR>:silent !" .. open_cmd .. " " .. tmp_file .. "<CR>:bd!<CR>",
     { noremap = true, silent = true }
 )
 
 -- Replace word / current selection with <leader>s
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]],
-    { desc = "Substitute occurences of current word" })
+vim.keymap.set(
+    "n",
+    "<leader>s",
+    [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]],
+    { desc = "Substitute occurences of current word" }
+)
 
 -- Replace visual selection in buffer with <leader>s
 vim.keymap.set("x", "<leader>s", function()
     vim.cmd('normal! "zy')
-    local selection = vim.fn.getreg('z')
+    local selection = vim.fn.getreg("z")
     local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
     local cmd = string.format("%%s/%s/%s/gc", escaped_selection, escaped_selection)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
@@ -283,22 +295,22 @@ vim.keymap.set("x", "<leader>s", function()
 end)
 
 -- Search and replace whole repo with <leader>S
-vim.keymap.set('x', '<leader>S', function()
+vim.keymap.set("x", "<leader>S", function()
     vim.cmd('normal! "zy')
-    local selection = vim.fn.getreg('z')
+    local selection = vim.fn.getreg("z")
     local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
-    local files = vim.fn.systemlist('rg -l ' .. escaped_selection)
+    local files = vim.fn.systemlist("rg -l " .. escaped_selection)
 
     local items = {}
     for _, filename in ipairs(files) do
         table.insert(items, { filename = filename, lnum = 1, col = 1, text = "" })
     end
-    vim.fn.setqflist({}, ' ', { title = 'Repo-replace', items = items })
+    vim.fn.setqflist({}, " ", { title = "Repo-replace", items = items })
 
     local cmd = "cfdo %s/" .. escaped_selection .. "/" .. escaped_selection .. "/gc | update"
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 12), true, false, true), "n", false)
-end, { desc = 'Repo wide replace: use visual selection as search, confirm each match' })
+end, { desc = "Repo wide replace: use visual selection as search, confirm each match" })
 
 -- <leader>ce to copy :messages to system clipboard. If a diagnostic popup is open, copy its content instead.
 vim.keymap.set("n", "<leader>ce", function()
@@ -318,20 +330,20 @@ vim.keymap.set("n", "<leader>ce", function()
         return
     end
 
-    vim.cmd('redir @+ | silent! messages | redir END')
+    vim.cmd("redir @+ | silent! messages | redir END")
     vim.notify("Copied entire :messages history", vim.log.levels.INFO)
 end, {
     noremap = true,
-    silent  = true,
-    desc    = "Copy diagnostic popup or full messages log",
+    silent = true,
+    desc = "Copy diagnostic popup or full messages log",
 })
 
 -- Keep visual selection when indenting in visual mode
-vim.keymap.set('x', '>', '>gv', { noremap = true })
-vim.keymap.set('x', '<', '<gv', { noremap = true })
+vim.keymap.set("x", ">", ">gv", { noremap = true })
+vim.keymap.set("x", "<", "<gv", { noremap = true })
 
 -- Copy current relative file path to system clipboard
-vim.keymap.set('n', '<leader>cp', function()
-    local rel = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':.')
-    vim.fn.setreg('+', rel)
+vim.keymap.set("n", "<leader>cp", function()
+    local rel = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
+    vim.fn.setreg("+", rel)
 end, { desc = "Copy file path relative to cwd to clipboard" })
