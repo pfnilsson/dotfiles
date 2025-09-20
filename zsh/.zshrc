@@ -65,6 +65,9 @@ bindkey -M viins "$KR" forward-char
 # enable backspace in insert mode
 bindkey -M viins '^?' backward-delete-char
 
+# set prompt
+PROMPT='%n@%m %1~ %% '
+
 # Pretty json output from curl
 curljq() {
   output=$(curl -sS "$@")
