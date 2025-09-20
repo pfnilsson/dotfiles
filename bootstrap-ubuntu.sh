@@ -109,6 +109,95 @@ for f in "$DOTFILES_DIR"/scripts/*; do
     chmod +x "$HOME/.local/bin/$base"
 done
 
+# --- GitHub auth via Git Credential Manager (Ubuntu) ---
+setup_gcm() {
+  set -euo pipefail
+
+  # You can force a store via env: GCM_STORE=secretservice|gpg
+  : "${GCM_STORE:=auto}"
+
+  sudo apt-get update -y
+  sudo apt-get install -y git ca-certificates curl
+
+  # Install jq for release discovery if needed
+  if ! command -v jq >/dev/null 2>&1; then
+    sudo apt-get install -y jq
+  fi
+
+  # 1) Install GCM if missing
+  if ! command -v git-credential-manager >/dev/null 2>&1; then
+    ARCH="$(dpkg --print-architecture)"  # amd64/arm64/etc.
+    echo "[GCM] Installing for arch: $ARCH"
+    url="$(curl -fsSL https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest \
+      | jq -r --arg arch "$ARCH" '.assets[] | select(.name | test("gcm-linux_"+$arch+".*\\.deb$")) | .browser_download_url' \
+      | head -n1)"
+    if [ -z "${url:-}" ]; then
+      echo "[GCM] No .deb asset found for $ARCH" >&2
+      return 1
+    fi
+    tmpdeb="$(mktemp /tmp/gcm.XXXXXX.deb)"
+    curl -fsSL "$url" -o "$tmpdeb"
+    # apt handles dependencies better than dpkg -i
+    sudo apt-get install -y "$tmpdeb"
+    rm -f "$tmpdeb"
+  fi
+
+  # 2) Wire GCM into Git (safe if already done)
+  git-credential-manager configure || true
+
+  # 3) Pick/store credentials (desktop keyring vs headless)
+  pick_store() {
+    case "$GCM_STORE" in
+      secretservice)
+        sudo apt-get install -y gnome-keyring libsecret-1-0
+        git config --global credential.credentialStore secretservice
+        ;;
+      gpg)
+        sudo apt-get install -y gnupg pass
+        # Ensure we have a GPG key for pass
+        if ! gpg --list-secret-keys --with-colons 2>/dev/null | grep -q '^sec:'; then
+          gpg --quick-generate-key "gcm-$(whoami)@$(hostname)" default default 2y
+        fi
+        KEYID="$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')"
+        pass init "$KEYID" >/dev/null 2>&1 || true
+        git config --global credential.credentialStore gpg
+        ;;
+      auto|*)
+        # Detect desktop session; treat WSL as headless
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+          GCM_STORE="gpg"
+          pick_store gpg
+        elif [ -n "${XDG_CURRENT_DESKTOP-}" ] || [ -n "${DESKTOP_SESSION-}" ] \
+             || [ "${XDG_SESSION_TYPE-}" = "x11" ] || [ "${XDG_SESSION_TYPE-}" = "wayland" ]; then
+          GCM_STORE="secretservice"
+          pick_store secretservice
+        else
+          GCM_STORE="gpg"
+          pick_store gpg
+        fi
+        ;;
+    esac
+  }
+  pick_store
+
+  # 4) Make GCM the ONLY helper in global scope (cleans duplicates)
+  git config --global --unset-all credential.helper 2>/dev/null || true
+  # Clean legacy names if present
+  git config --global --unset-all credential.helper manager-core 2>/dev/null || true
+  # Set the current helper
+  git config --global --add credential.helper manager
+
+  # (Optional) scrub system/local helpers if you want zero surprises:
+  # sudo git config --system --unset-all credential.helper 2>/dev/null || true
+  # git config --local --unset-all credential.helper 2>/dev/null || true
+
+  echo "[GCM] $(git-credential-manager --version)"
+  echo "[GCM] helper(s): $(git config --global --get-all credential.helper | paste -sd ',')"
+  echo "[GCM] store:     $(git config --global credential.credentialStore)"
+}
+
+setup_gcm
+
 echo
 echo "✅ Bootstrap complete!"
 echo "Neovim, Ghostty installed via Snap; dotfiles copied"
