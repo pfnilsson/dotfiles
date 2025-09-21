@@ -1,7 +1,3 @@
-local function strip_trailing_slash(path)
-    return path:gsub("/$", "")
-end
-
 return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -9,10 +5,9 @@ return {
         { "antosha417/nvim-lsp-file-operations", config = true },
         {
             "folke/lazydev.nvim",
-            ft = "lua", -- only load on lua files
+            ft = "lua",
             opts = {
                 library = {
-                    -- Load luvit types when the `vim.uv` word is found
                     { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 },
             },
@@ -20,69 +15,71 @@ return {
         { "folke/snacks.nvim" },
     },
     config = function()
-        -- Import required plugins
-        local lspconfig = require("lspconfig")
-        local blink_cmp = require("blink.cmp")
-        local secrets = require("fredrik.load_secrets")
+        local ok_blink, blink_cmp = pcall(require, "blink.cmp")
+        local capabilities = (ok_blink and blink_cmp.get_lsp_capabilities())
+            or vim.lsp.protocol.make_client_capabilities()
+        if capabilities
+            and capabilities.textDocument
+            and capabilities.textDocument.completion
+            and capabilities.textDocument.completion.completionItem
+        then
+            capabilities.textDocument.completion.completionItem.snippetSupport = false
+        end
 
-        -- Create an autocommand for LSP attachment to set keybindings
         vim.api.nvim_create_autocmd("LspAttach", {
-            group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+            group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
             callback = function(ev)
-                -- Buffer local mappings.
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,
                     { buffer = ev.buf, silent = true, desc = "Smart rename" })
             end,
-
         })
 
-        -- Disable hover for Ruff in favor of Pyright
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
             callback = function(args)
                 local client = vim.lsp.get_client_by_id(args.data.client_id)
-                if client == nil then
-                    return
-                end
-                if client.name == "ruff" then
-                    -- Disable hover in favor of Pyright
+                if client and client.name == "ruff" then
                     client.server_capabilities.hoverProvider = false
                 end
             end,
             desc = "LSP: Disable hover capability from Ruff",
         })
 
-        -- Enhance capabilities for autocompletion
-        local capabilities = blink_cmp.get_lsp_capabilities()
+        local function find_pattern_dir(pattern)
+            local current = vim.fn.getcwd()
+            while current ~= "/" do
+                local p = current .. "/" .. pattern
+                if vim.fn.isdirectory(p) == 1 then
+                    return p
+                end
+                current = vim.fn.fnamemodify(current, ":h")
+            end
+            return nil
+        end
 
-        -- disable snippet-support
-        capabilities.textDocument.completion.completionItem.snippetSupport = false
+        local project_nvim = find_pattern_dir(".nvim")
+        if project_nvim then
+            vim.opt.runtimepath:append(project_nvim)
+        end
 
-        -- update default capabilites
-        lspconfig.util.default_config = vim.tbl_extend("force",
-            lspconfig.util.default_config,
-            { capabilities = capabilities }
-        )
+        local secrets_ok, secrets = pcall(require, "fredrik.load_secrets")
+        local local_import_path = secrets_ok and secrets.local_import_path or nil
 
-        -- Setup Mason LSP configurations with custom handlers
+        local has_repo_gopls = project_nvim
+            and (vim.fn.filereadable(project_nvim .. "/lsp/gopls.lua") == 1)
 
-        -- Handler for lua_ls with specific settings
-        lspconfig.lua_ls.setup({
+        vim.lsp.config("lua_ls", {
             capabilities = capabilities,
             settings = {
                 Lua = {
-                    diagnostics = {
-                        globals = { "vim" },
-                    },
-                    completion = {
-                        callSnippet = "Replace",
-                    },
+                    diagnostics = { globals = { "vim" } },
+                    completion = { callSnippet = "Replace" },
                 },
             },
         })
+        vim.lsp.enable("lua_ls")
 
-        -- Handler for basedpyright with Ruff integration
-        lspconfig.basedpyright.setup({
+        vim.lsp.config("basedpyright", {
             capabilities = capabilities,
             settings = {
                 basedpyright = {
@@ -97,76 +94,45 @@ return {
                             autoSearchPaths = true,
                             enableTypeIgnoreComments = false,
                             reportPossiblyUnboundVariable = false,
-                        }
-                    }
-                },
-            }
-        })
-        local function setup_gopls()
-            lspconfig.gopls.setup({
-                capabilities = capabilities,
-                root_dir = function(fname)
-                    local util = require("lspconfig.util")
-
-                    -- If we find a WORKSPACE in the ancestry, prefer that (typical Bazel approach).
-                    local root = util.root_pattern("WORKSPACE", "WORKSPACE.bzlmod")(fname)
-
-                    if root then
-                        return root
-                    end
-
-                    if fname:find("^" .. secrets.repo_path) or fname:find(secrets.cache_path) then
-                        return strip_trailing_slash(secrets.repo_path)
-                    end
-
-                    -- Fallback: if not recognized as a Bazel path, use normal approach
-                    return util.root_pattern("go.mod", ".git")(fname) or vim.fn.getcwd()
-                end,
-                on_new_config = function(cfg, root)
-                    if strip_trailing_slash(root) == strip_trailing_slash(secrets.repo_path) then
-                        cfg.cmd_env = vim.tbl_extend("force", cfg.cmd_env or {}, {
-                            GOPACKAGESDRIVER = secrets.repo_path .. "scripts/gopackagesdriver.sh",
-                            GOROOT           = secrets.repo_path .. secrets.go_root,
-                            GO111MODULE      = 'on',
-                        })
-                    end
-                end,
-                settings = {
-                    gopls = {
-                        workspaceFiles   = {
-                            "**/BUILD",
-                            "**/WORKSPACE",
-                            "**/*.bazel"
-                        },
-                        directoryFilters = {
-                            "-bazel-bin", "-bazel-out", "-bazel-testlogs",
-                            secrets.bazel_dir_filter,
-                        },
-                        analyses         = { unusedparams = true, unusedwrite = true },
-                        staticcheck      = true,
-                        gofumpt          = true,
-                        ["local"]        = secrets.local_import_path,
-                        usePlaceholders  = true,
-                        semanticTokens   = true,
-                        codelenses       = {
-                            gc_details         = false,
-                            regenerate_cgo     = false,
-                            generate           = false,
-                            test               = false,
-                            tidy               = false,
-                            upgrade_dependency = false,
-                            vendor             = false,
                         },
                     },
                 },
+            },
+        })
+        vim.lsp.enable("basedpyright")
+
+        if has_repo_gopls then
+            vim.lsp.config("gopls", { capabilities = capabilities })
+        else
+            local gopls_settings = {
+                analyses        = { unusedparams = true, unusedwrite = true },
+                staticcheck     = true,
+                gofumpt         = true,
+                usePlaceholders = true,
+                semanticTokens  = true,
+                codelenses      = {
+                    gc_details         = false,
+                    regenerate_cgo     = false,
+                    generate           = false,
+                    test               = false,
+                    tidy               = false,
+                    upgrade_dependency = false,
+                    vendor             = false,
+                },
+            }
+            if local_import_path then
+                gopls_settings["local"] = local_import_path
+            end
+
+            vim.lsp.config("gopls", {
+                capabilities = capabilities,
+                settings = { gopls = gopls_settings },
             })
         end
-
-        setup_gopls()
+        vim.lsp.enable("gopls")
 
         vim.api.nvim_create_user_command("GoplsRestart", function()
-            setup_gopls()
             vim.cmd("LspRestart gopls")
-        end, { desc = "Restart gopls and reload its full configuration" }) -- lspconfig.gopls.setup({
+        end, { desc = "Restart gopls" })
     end,
 }
