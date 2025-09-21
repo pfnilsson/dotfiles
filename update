@@ -18,6 +18,9 @@ cp ~/.zshrc "$SCRIPT_DIR"/zsh/.zshrc
 # Copy catppuccin for zsh syntax highlighting
 cp ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh "$SCRIPT_DIR"/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
+# Copy zsh-vi-mode
+rsync -a --delete "$HOME/.zsh/zsh-vi-mode/" "$SCRIPT_DIR/zsh/zsh-vi-mode/" 
+
 # Copy the neovim config to /nvim
 rsync -a --delete ~/.config/nvim/ "$SCRIPT_DIR"/nvim
 
