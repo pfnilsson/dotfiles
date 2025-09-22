@@ -80,7 +80,26 @@ curljq() {
 
 # Start nvim with a socket name per cwd
 nvim() {
-  local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
+  local base="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
+  local socket="$base"
+
+  # If a socket file exists, check if a Neovim server is actually alive on it.
+  if [ -S "$base" ]; then
+    if command nvim --server "$base" --remote-expr 1 >/dev/null 2>&1; then
+      # Alive: pick a random-suffix socket name, keeping the first deterministic.
+      local base_noext="${base%.sock}" suffix
+      while :; do
+        suffix="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
+        socket="${base_noext}-${suffix}.sock"
+        [ ! -e "$socket" ] && break
+      done
+    else
+      # Stale socket: remove it so we can reuse the deterministic name.
+      rm -f -- "$base"
+      socket="$base"
+    fi
+  fi
+
   command nvim --listen "$socket" "$@"
 }
 
