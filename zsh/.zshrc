@@ -144,6 +144,12 @@ function gazelle() {
 alias brg="gazelle"
 alias btd="bazel test //nodes/decisionsystems/... --test_output=errors --test_tag_filters="
 alias bmt="bazel run //:go -- mod tidy -e"
+alias bf="bazel run :gofmt --"
+
+bt() {
+  local dir=${1:h}
+  command bazel test "//$dir/..." --test_output=errors --test_tag_filters= "$@"
+}
 
 # Colorize ls
 alias ls="ls --color=auto"
