@@ -142,7 +142,7 @@ function gazelle() {
 
 # Bazel aliases
 alias brg="gazelle"
-alias btd="bazel test //nodes/decisionsystems/... --test_output=errors --test_tag_filters="
+alias btd="bazel test //nodes/foundations/decisionsystems/... --test_output=errors --test_tag_filters="
 alias bmt="bazel run //:go -- mod tidy -e"
 alias bf="bazel run :gofmt --"
 
