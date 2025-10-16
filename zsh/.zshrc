@@ -127,11 +127,9 @@ fi
 function gazelle() {
   if bazel run //:gazelle -- "$@"; then
     local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
-    # Check if Neovim is running on that socket
     if nvr --servername "$socket" --nostart --remote-expr "v:true" &>/dev/null; then
-      # Invoke your custom :GoplsRestart in the remote Neovim
-      nvr --servername "$socket" --nostart -c "GoplsRestart" || true
-      echo "✅ gopls restarted via :GoplsRestart"
+      nvr --servername "$socket" --nostart -c 'LspRestart gopls' || true
+      echo "✅ gopls restarted"
     else
       echo "⚠️ Neovim isn’t running or listening at $socket"
     fi
@@ -139,7 +137,6 @@ function gazelle() {
     echo "❌ gazelle failed"
   fi
 }
-
 # Bazel aliases
 alias brg="gazelle"
 alias btd="bazel test //nodes/foundations/decisionsystems/... --test_output=errors --test_tag_filters="

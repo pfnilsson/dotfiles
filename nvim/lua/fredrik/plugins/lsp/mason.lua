@@ -6,10 +6,9 @@ return {
 	},
 	config = function()
 		local mason = require("mason")
-
 		local mason_lspconfig = require("mason-lspconfig")
-
 		local mason_tool_installer = require("mason-tool-installer")
+		local registry = require("fredrik.lsp.registry")
 
 		mason.setup({
 			ui = {
@@ -22,29 +21,7 @@ return {
 		})
 
 		---@diagnostic disable-next-line: missing-fields
-		mason_lspconfig.setup({
-			-- list of servers for mason to install
-			ensure_installed = {
-				"html",
-				"lua_ls",
-				"basedpyright",
-				"gopls",
-				"rust_analyzer",
-				"ruff",
-				"jsonls",
-				"sqls",
-				"terraformls",
-			},
-		})
-
-		mason_tool_installer.setup({
-			ensure_installed = {
-				"prettier",
-				"stylua",
-				"pylint",
-				"eslint_d",
-				"delve",
-			},
-		})
+		mason_lspconfig.setup({ ensure_installed = registry.servers })
+		mason_tool_installer.setup({ ensure_installed = registry.tools })
 	end,
 }
