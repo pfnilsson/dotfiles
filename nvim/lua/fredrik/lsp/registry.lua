@@ -18,6 +18,7 @@ M.tools = {
 	"pylint",
 	"eslint_d",
 	"delve",
+	"copilot-language-server",
 }
 
 function M.partition()

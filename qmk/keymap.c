@@ -29,11 +29,12 @@ const key_override_t altgr_l = ko_make_basic(MOD_BIT(KC_RALT), KC_L, S(KC_F8));
 const key_override_t altgr_n = ko_make_basic(MOD_BIT(KC_RALT), KC_N, S(KC_F9));
 const key_override_t altgr_p = ko_make_basic(MOD_BIT(KC_RALT), KC_P, S(KC_F10));
 const key_override_t altgr_eql = ko_make_basic(MOD_BIT(KC_RALT), KC_EQL, S(KC_F11));
+const key_override_t altgr_t = ko_make_basic(MOD_BIT(KC_RALT), KC_T, S(KC_F12));
 
 const key_override_t *key_overrides[] = {
     &altgr_1, &altgr_a, &altgr_d, &altgr_f, &altgr_h,
     &altgr_j, &altgr_k, &altgr_l, &altgr_n, &altgr_p,
-    &altgr_eql,
+    &altgr_eql, &altgr_t,
 };
 
 enum layers{

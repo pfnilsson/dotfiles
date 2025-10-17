@@ -1,4 +1,4 @@
------------------------------------------------------------
+----------------------------------------------------------
 -- Leader Key Setup
 -----------------------------------------------------------
 vim.g.mapleader = " "
@@ -19,62 +19,62 @@ vim.keymap.set("o", "<Space>", "<Nop>", opts)
 
 -- Go to previous diagnostic
 vim.keymap.set("n", "ÅD", function()
-    vim.diagnostic.jump({ count = -1, float = true })
+	vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Go to previous diagnostic" })
 
 -- Go to next diagnostic
 vim.keymap.set("n", "åd", function()
-    vim.diagnostic.jump({ count = 1, float = true })
+	vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Go to next diagnostic" })
 
 -- Go to previous error
 vim.keymap.set("n", "ÅE", function()
-    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })
+	vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })
 end, { desc = "Go to previous error" })
 
 -- Go to next error
 vim.keymap.set("n", "åe", function()
-    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })
+	vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })
 end, { desc = "Go to next error" })
 
 -- Go to previous warning
 vim.keymap.set("n", "ÅW", function()
-    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })
+	vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })
 end, { desc = "Go to previous warning" })
 
 -- Go to next warning
 vim.keymap.set("n", "åw", function()
-    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })
+	vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })
 end, { desc = "Go to next warning" })
 
 -- Go to previous hint
 vim.keymap.set("n", "ÅH", function()
-    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.HINT })
+	vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.HINT })
 end, { desc = "Go to previous hint" })
 
 -- Go to next hint
 vim.keymap.set("n", "åh", function()
-    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.HINT })
+	vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.HINT })
 end, { desc = "Go to next hint" })
 
 -- Go to previous information
 vim.keymap.set("n", "ÅI", function()
-    vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.INFO })
+	vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to previous information" })
 
 -- Go to next information
 vim.keymap.set("n", "åi", function()
-    vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.INFO })
+	vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.INFO })
 end, { desc = "Go to next information" })
 
 -- Go to next blank line
 vim.keymap.set("n", "åb", function()
-    vim.fn.search("^\\s*$", "W")
+	vim.fn.search("^\\s*$", "W")
 end, { desc = "Next blank line" })
 
 -- Go to previous blank line
 vim.keymap.set("n", "ÅB", function()
-    vim.fn.search("^\\s*$", "bW")
+	vim.fn.search("^\\s*$", "bW")
 end, { desc = "Previous blank line" })
 
 -- Next section
@@ -100,21 +100,21 @@ vim.keymap.set({ "n", "v" }, "§", "~", { noremap = true, silent = true })
 
 -- Fix all with <leader>cf
 local function fixAll()
-    vim.lsp.buf.code_action({
-        context = { only = { "source.fixAll" }, diagnostics = {} },
-        apply = true,
-        async = false,
-    })
+	vim.lsp.buf.code_action({
+		context = { only = { "source.fixAll" }, diagnostics = {} },
+		apply = true,
+		async = false,
+	})
 end
 vim.keymap.set("n", "<leader>cf", fixAll, { desc = "Fix All" })
 
 -- Organize imports with <leader>co
 local function organizeImports()
-    vim.lsp.buf.code_action({
-        context = { only = { "source.organizeImports" }, diagnostics = {} },
-        apply = true,
-        async = false,
-    })
+	vim.lsp.buf.code_action({
+		context = { only = { "source.organizeImports" }, diagnostics = {} },
+		apply = true,
+		async = false,
+	})
 end
 vim.keymap.set("n", "<leader>co", organizeImports, { desc = "Organize Imports" })
 
@@ -151,7 +151,7 @@ vim.keymap.set("n", "<leader>Y", [["+y$]])
 
 -- <leader>C to copy from neovim clipboard to system clipboard
 vim.keymap.set("n", "<leader>C", function()
-    vim.fn.setreg("+", vim.fn.getreg('"'))
+	vim.fn.setreg("+", vim.fn.getreg('"'))
 end, { noremap = true, silent = true })
 
 -- <leader>p/P to paste from system clipboard
@@ -200,43 +200,43 @@ vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 
 -- Function to toggle the Quickfix List
 local function toggle_quickfix()
-    -- Iterate through all open windows
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        if vim.bo[buf].buftype == "quickfix" then
-            -- If Quickfix window is found, close it
-            vim.api.nvim_win_close(win, true)
-            return
-        end
-    end
-    -- If Quickfix window is not open, open it
-    vim.cmd("copen")
+	-- Iterate through all open windows
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local buf = vim.api.nvim_win_get_buf(win)
+		if vim.bo[buf].buftype == "quickfix" then
+			-- If Quickfix window is found, close it
+			vim.api.nvim_win_close(win, true)
+			return
+		end
+	end
+	-- If Quickfix window is not open, open it
+	vim.cmd("copen")
 end
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true, desc = "Toggle Quickfix list" })
 
 -- some go boiler plate help
 -- <leader>ee to insert if err != nil { return err } block (for go)
 vim.keymap.set(
-    "n",
-    "<leader>ee",
-    "oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
-    { desc = "Insert if err != nil {return err}" }
+	"n",
+	"<leader>ee",
+	"oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
+	{ desc = "Insert if err != nil {return err}" }
 )
 
 -- <leader>ef to insert if err != nil {log.Fatalf} block
 vim.keymap.set(
-    "n",
-    "<leader>ef",
-    'oif err != nil {<CR>}<Esc>Olog.Fatalf("Error: %v\\n", err)<Esc>jj',
-    { desc = "Insert if err != nil {log.Fatalf} block" }
+	"n",
+	"<leader>ef",
+	'oif err != nil {<CR>}<Esc>Olog.Fatalf("Error: %v\\n", err)<Esc>jj',
+	{ desc = "Insert if err != nil {log.Fatalf} block" }
 )
 
 -- <leader> ew to insert if err != nil with wrapped return err
 vim.keymap.set(
-    "n",
-    "<leader>ew",
-    'oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf("%w", err)<Esc>F"hhi',
-    { desc = "Insert if err != nil with wrapped return err" }
+	"n",
+	"<leader>ew",
+	'oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf("%w", err)<Esc>F"hhi',
+	{ desc = "Insert if err != nil with wrapped return err" }
 )
 
 -- Rebind <C-o> since some plugin removes it
@@ -249,9 +249,9 @@ vim.keymap.set("i", "<C-d>", "<C-o>x", { noremap = true, silent = true })
 local keys_to_disable = { "<Up>", "<Down>", "<Left>", "<Right>", "<Del>" }
 local modes = { "n", "i", "v", "t" }
 for _, mode in ipairs(modes) do
-    for _, key in ipairs(keys_to_disable) do
-        vim.keymap.set(mode, key, "<Nop>", { noremap = true, silent = true })
-    end
+	for _, key in ipairs(keys_to_disable) do
+		vim.keymap.set(mode, key, "<Nop>", { noremap = true, silent = true })
+	end
 end
 
 -- Escape removes search highlighting in normal mode
@@ -270,72 +270,72 @@ local tmp_file = "/tmp/neovim.html"
 
 -- Create a key mapping to convert the current buffer to HTML and open it in the browser.
 vim.api.nvim_set_keymap(
-    "n",
-    "<leader>cx",
-    ":TOhtml<CR>:w! " .. tmp_file .. "<CR>:silent !" .. open_cmd .. " " .. tmp_file .. "<CR>:bd!<CR>",
-    { noremap = true, silent = true }
+	"n",
+	"<leader>cx",
+	":TOhtml<CR>:w! " .. tmp_file .. "<CR>:silent !" .. open_cmd .. " " .. tmp_file .. "<CR>:bd!<CR>",
+	{ noremap = true, silent = true }
 )
 
 -- Replace word / current selection with <leader>s
 vim.keymap.set(
-    "n",
-    "<leader>s",
-    [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]],
-    { desc = "Substitute occurences of current word" }
+	"n",
+	"<leader>s",
+	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]],
+	{ desc = "Substitute occurences of current word" }
 )
 
 -- Replace visual selection in buffer with <leader>s
 vim.keymap.set("x", "<leader>s", function()
-    vim.cmd('normal! "zy')
-    local selection = vim.fn.getreg("z")
-    local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
-    local cmd = string.format("%%s/%s/%s/gc", escaped_selection, escaped_selection)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
+	vim.cmd('normal! "zy')
+	local selection = vim.fn.getreg("z")
+	local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
+	local cmd = string.format("%%s/%s/%s/gc", escaped_selection, escaped_selection)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 3), true, false, true), "n", false)
 end)
 
 -- Search and replace whole repo with <leader>S
 vim.keymap.set("x", "<leader>S", function()
-    vim.cmd('normal! "zy')
-    local selection = vim.fn.getreg("z")
-    local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
-    local files = vim.fn.systemlist("rg -l " .. escaped_selection)
+	vim.cmd('normal! "zy')
+	local selection = vim.fn.getreg("z")
+	local escaped_selection = vim.fn.escape(selection, "/\\.*$^~[]")
+	local files = vim.fn.systemlist("rg -l " .. escaped_selection)
 
-    local items = {}
-    for _, filename in ipairs(files) do
-        table.insert(items, { filename = filename, lnum = 1, col = 1, text = "" })
-    end
-    vim.fn.setqflist({}, " ", { title = "Repo-replace", items = items })
+	local items = {}
+	for _, filename in ipairs(files) do
+		table.insert(items, { filename = filename, lnum = 1, col = 1, text = "" })
+	end
+	vim.fn.setqflist({}, " ", { title = "Repo-replace", items = items })
 
-    local cmd = "cfdo %s/" .. escaped_selection .. "/" .. escaped_selection .. "/gc | update"
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 12), true, false, true), "n", false)
+	local cmd = "cfdo %s/" .. escaped_selection .. "/" .. escaped_selection .. "/gc | update"
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":" .. cmd, true, false, true), "n", false)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(string.rep("<left>", 12), true, false, true), "n", false)
 end, { desc = "Repo wide replace: use visual selection as search, confirm each match" })
 
 -- <leader>ce to copy :messages to system clipboard. If a diagnostic popup is open, copy its content instead.
 vim.keymap.set("n", "<leader>ce", function()
-    local diag_lines = {}
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local ok, config = pcall(vim.api.nvim_win_get_config, win)
-        if ok and config.relative and config.relative ~= "" then
-            local buf = vim.api.nvim_win_get_buf(win)
-            diag_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-            break
-        end
-    end
+	local diag_lines = {}
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local ok, config = pcall(vim.api.nvim_win_get_config, win)
+		if ok and config.relative and config.relative ~= "" then
+			local buf = vim.api.nvim_win_get_buf(win)
+			diag_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+			break
+		end
+	end
 
-    if #diag_lines > 0 then
-        vim.fn.setreg("+", table.concat(diag_lines, "\n"))
-        vim.notify("Copied diagnostic window", vim.log.levels.INFO)
-        return
-    end
+	if #diag_lines > 0 then
+		vim.fn.setreg("+", table.concat(diag_lines, "\n"))
+		vim.notify("Copied diagnostic window", vim.log.levels.INFO)
+		return
+	end
 
-    vim.cmd("redir @+ | silent! messages | redir END")
-    vim.notify("Copied entire :messages history", vim.log.levels.INFO)
+	vim.cmd("redir @+ | silent! messages | redir END")
+	vim.notify("Copied entire :messages history", vim.log.levels.INFO)
 end, {
-    noremap = true,
-    silent = true,
-    desc = "Copy diagnostic popup or full messages log",
+	noremap = true,
+	silent = true,
+	desc = "Copy diagnostic popup or full messages log",
 })
 
 -- Keep visual selection when indenting in visual mode
@@ -344,6 +344,9 @@ vim.keymap.set("x", "<", "<gv", { noremap = true })
 
 -- Copy current relative file path to system clipboard
 vim.keymap.set("n", "<leader>cp", function()
-    local rel = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
-    vim.fn.setreg("+", rel)
+	local rel = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
+	vim.fn.setreg("+", rel)
 end, { desc = "Copy file path relative to cwd to clipboard" })
+
+-- <Esc><Esc> enters normal mode in terminal
+vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Terminal normal" })
