@@ -27,7 +27,7 @@ local gopls_defaults = {
 	analyses = { unusedparams = true, unusedwrite = true },
 	staticcheck = true,
 	gofumpt = true,
-	usePlaceholders = true,
+	usePlaceholders = false,
 	semanticTokens = true,
 	codelenses = {
 		gc_details = false,
