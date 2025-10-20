@@ -10,16 +10,14 @@ return {
 	},
 	keys = {
 		{
-			"<Tab>",
+			"<tab>",
 			function()
-				local Nes = require("sidekick.nes")
-				if not (Nes.have() and (Nes.apply() or Nes.jump())) then
+				if not require("sidekick").nes_jump_or_apply() then
 					return "<Tab>"
 				end
 			end,
 			expr = true,
-			mode = { "n" },
-			desc = "Apply-or-Jump NES",
+			desc = "Goto/Apply Next Edit Suggestion",
 		},
 		{
 			"<leader>ad",
@@ -31,7 +29,7 @@ return {
 		{
 			"<leader>at",
 			function()
-				require("sidekick.cli").send({ msg = "{this}" })
+				require("sidekick.cli").send({ name = "claude", msg = "{this}" })
 			end,
 			mode = { "x", "n" },
 			desc = "Send This",
@@ -39,14 +37,14 @@ return {
 		{
 			"<leader>af",
 			function()
-				require("sidekick.cli").send({ msg = "{file}" })
+				require("sidekick.cli").send({ name = "claude", msg = "{file}" })
 			end,
 			desc = "Send File",
 		},
 		{
 			"<leader>av",
 			function()
-				require("sidekick.cli").send({ msg = "{selection}" })
+				require("sidekick.cli").send({ name = "claude", msg = "{selection}" })
 			end,
 			mode = { "x" },
 			desc = "Send Visual Selection",

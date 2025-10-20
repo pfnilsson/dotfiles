@@ -214,31 +214,6 @@ local function toggle_quickfix()
 end
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true, desc = "Toggle Quickfix list" })
 
--- some go boiler plate help
--- <leader>ee to insert if err != nil { return err } block (for go)
-vim.keymap.set(
-	"n",
-	"<leader>ee",
-	"oif err != nil {<CR>}<Esc>Oreturn err<Esc>",
-	{ desc = "Insert if err != nil {return err}" }
-)
-
--- <leader>ef to insert if err != nil {log.Fatalf} block
-vim.keymap.set(
-	"n",
-	"<leader>ef",
-	'oif err != nil {<CR>}<Esc>Olog.Fatalf("Error: %v\\n", err)<Esc>jj',
-	{ desc = "Insert if err != nil {log.Fatalf} block" }
-)
-
--- <leader> ew to insert if err != nil with wrapped return err
-vim.keymap.set(
-	"n",
-	"<leader>ew",
-	'oif err != nil {<CR>}<Esc>Oreturn fmt.Errorf("%w", err)<Esc>F"hhi',
-	{ desc = "Insert if err != nil with wrapped return err" }
-)
-
 -- Rebind <C-o> since some plugin removes it
 vim.keymap.set("i", "<C-o>", "<C-o>", { noremap = true, silent = true })
 
