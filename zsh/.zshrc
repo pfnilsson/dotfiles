@@ -1,3 +1,42 @@
+# Directory for Zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit, if we don't already have it
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source Zinit
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add Zinit plugins
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Load completions
+autoload -U compinit && compinit
+zinit cdreplay -q
+
+# Completion styling
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+
+# History
+HISTSIZE=5000
+HISTIFLE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
 # ─────────────────────────────────────────────────────────────
 # Better vi mode
 # ─────────────────────────────────────────────────────────────
@@ -6,12 +45,20 @@ function zvm_config() {
     ZVM_SYSTEM_CLIPBOARD_ENABLED=true
 }
 
-# use system clipboard with paste
 function zvm_after_lazy_keybindings() {
+    # use system clipboard with paste
     bindkey -M vicmd 'p' zvm_paste_clipboard_after
     bindkey -M vicmd 'P' zvm_paste_clipboard_before
     bindkey -M visual 'p' zvm_visual_paste_clipboard
     bindkey -M visual 'P' zvm_visual_paste_clipboard
+}
+
+function zvm_after_init() {
+    # Fuzzy find integration (must be loaded after zsh-vi-mode)
+    eval "$(fzf --zsh)"
+
+    # Ctrl+Y to accept autosuggestions (must be set after zsh-vi-mode loads)
+    bindkey '^Y' autosuggest-accept
 }
 
 # source the plugin
@@ -105,9 +152,6 @@ nvim() {
 
 # Start nvim with remote
 export NVIM_LISTEN_ADDRESS="/tmp/nvim.sock"
-
-# Enable advanced tab-completion features in zsh
-autoload -Uz compinit && compinit
 
 # Source rust env
 . "$HOME/.cargo/env"
