@@ -10,36 +10,6 @@ fi
 # Source Zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Add Zinit plugins
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-
-# Load completions
-autoload -U compinit && compinit
-zinit cdreplay -q
-
-# Completion styling
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-
-# History
-HISTSIZE=5000
-HISTIFLE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
-
-# ─────────────────────────────────────────────────────────────
-# Better vi mode
-# ─────────────────────────────────────────────────────────────
 function zvm_config() {
     # Use system clipboard
     ZVM_SYSTEM_CLIPBOARD_ENABLED=true
@@ -61,29 +31,39 @@ function zvm_after_init() {
     bindkey '^Y' autosuggest-accept
 }
 
-# source the plugin
-source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# Add Zinit plugins
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light jeffreytse/zsh-vi-mode
 
-# ─────────────────────────────────────────────────────────────
-# explicit arrow-keys in insert-mode for history/cursor
-# ─────────────────────────────────────────────────────────────
-# CSI-style
-bindkey -M viins '^[[A' up-line-or-history
-bindkey -M viins '^[[B' down-line-or-history
-bindkey -M viins '^[[C' forward-char
-bindkey -M viins '^[[D' backward-char
-# SS3-style (some terminals send these in application mode)
-bindkey -M viins '^[OA' up-line-or-history
-bindkey -M viins '^[OB' down-line-or-history
-bindkey -M viins '^[OC' forward-char
-bindkey -M viins '^[OD' backward-char
+# Init completion system
+autoload -U compinit && compinit
+zinit cdreplay -q
 
-# ─────────────────────────────────────────────────────────────
-# remap Enter/CR in insert-mode to newline, use Ctrl-J to accept
-# ─────────────────────────────────────────────────────────────
+# fzf-tab must be AFTER compinit
+zinit light Aloxaf/fzf-tab
 
-bindkey -M viins $'\C-j' self-insert   # Ctrl-J inserts a literal newline
-bindkey -M viins $'\r'   accept-line   # Enter submits the buffer
+# Catppuccin theme for zsh-syntax-highlighting
+zinit ice depth=1 pick"themes/catppuccin_mocha-zsh-syntax-highlighting.zsh"
+zinit light catppuccin/zsh-syntax-highlighting
+zinit light zsh-users/zsh-syntax-highlighting
+
+# Completion styling
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
 # ─────────────────────────────────────────────────────────────
 # bindings in command (normal) mode
@@ -96,23 +76,7 @@ bindkey -M vicmd '¤' vi-end-of-line
 # yank to end of line
 bindkey -M vicmd 'Y' vi-yank-eol
 
-# ─────────────────────────────────────────────────────────────
-# get the real arrow‐key sequences from terminfo
-local KU="${terminfo[kcuu1]}"   # Up
-local KD="${terminfo[kcud1]}"   # Down
-local KL="${terminfo[kcub1]}"   # Left
-local KR="${terminfo[kcuf1]}"   # Right
-
-# in insert mode, use arrows for history and cursor movements
-bindkey -M viins "$KU" up-line-or-history
-bindkey -M viins "$KD" down-line-or-history
-bindkey -M viins "$KL" backward-char
-bindkey -M viins "$KR" forward-char
-
-# enable backspace in insert mode
-bindkey -M viins '^?' backward-delete-char
-
-# set prompt
+# Set prompt
 PROMPT='%n@%m %1~ %% '
 
 # Pretty json output from curl
@@ -149,18 +113,6 @@ nvim() {
 
   command nvim --listen "$socket" "$@"
 }
-
-# Start nvim with remote
-export NVIM_LISTEN_ADDRESS="/tmp/nvim.sock"
-
-# Source rust env
-. "$HOME/.cargo/env"
-
-# Python version aliases to use uv as python installer
-alias python3.9="~/.local/share/uv/python/cpython-3.9.20-macos-aarch64-none/bin/python3.9"
-alias python3.10="~/.local/share/uv/python/cpython-3.10.15-macos-aarch64-none/bin/python3.10"
-alias python3.11="~/.local/share/uv/python/cpython-3.11.10-macos-aarch64-none/bin/python3.11"
-alias python3.12="~/.local/share/uv/python/cpython-3.12.7-macos-aarch64-none/bin/python3.12"
 
 # Java env init
 if command -v jenv >/dev/null 2>&1; then
@@ -201,21 +153,12 @@ if [[ -f "$PRETZEL_FILE" ]]; then
     source "$PRETZEL_FILE"
 fi
 
-
 # Use neovim as default editor
 export EDITOR="nvim"
 export VISUAL="nvim"
 
 # Excplicitly bind Ctrl-R to reverse search because tmux sometimes breaks it
 bindkey '^R' history-incremental-search-backward
-
-# Syntax highlighting
-source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
-if [[ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-elif [[ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-fi
 
 # Add go to path
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin/
