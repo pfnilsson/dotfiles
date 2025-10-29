@@ -77,10 +77,21 @@ if ! command -v lazygit >/dev/null; then
     rm /tmp/lazygit /tmp/lazygit.tar.gz
 fi
 
-# --- 6) Install python deps
+# --- 6) Install uv (standalone) ---
+if ! command -v uv >/dev/null; then
+    echo "Installing uv (standalone)..."
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+fi
+
+# Ensure ~/.local/bin is on PATH for zsh (so uv/uvx are found)
+if ! grep -qs 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.zshrc"; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
+fi
+
+# --- 7) Install python deps
 sudo apt install -y python3-venv python3-pip
 
-# --- 7) Copy dotfiles ---
+# --- 8) Copy dotfiles ---
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
