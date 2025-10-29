@@ -41,19 +41,6 @@ if [[ -f "$SCRIPT_DIR/zsh/.zshrc" ]]; then
   echo "✓ .zshrc"
 fi
 
-# catppuccin zsh syntax highlighting -> ~/.zsh
-if [[ -f "$SCRIPT_DIR/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" ]]; then
-  cp "$SCRIPT_DIR/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" \
-     "$HOME/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
-  echo "✓ catppuccin zsh syntax highlighting"
-fi
-
-# zsh-vi-mode -> ~/.zsh/zsh-vi-mode
-if [[ -d "$SCRIPT_DIR/zsh/zsh-vi-mode" ]]; then
-  rsync -a --delete "$SCRIPT_DIR/zsh/zsh-vi-mode/" "$HOME/.zsh/zsh-vi-mode/"
-  echo "✓ zsh-vi-mode"
-fi
-
 # nvim -> ~/.config/nvim
 if [[ -d "$SCRIPT_DIR/nvim" ]]; then
   rsync -a --delete "$SCRIPT_DIR/nvim/" "$HOME/.config/nvim/"

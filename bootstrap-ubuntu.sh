@@ -33,10 +33,6 @@ echo "Installing clipboard tools..."
 sudo apt update
 sudo apt install -y xclip xsel
 
-echo "Installing zsh-syntax-highlighting..."
-sudo apt update
-sudo apt install -y zsh-syntax-highlighting
-
 echo "Installing fzf"
 sudo apt update
 sudo apt install fzf -y
@@ -96,10 +92,6 @@ copy_item "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 cp -rf "$DOTFILES_DIR/tmux" "$HOME/.config"
 
 copy_item "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
-
-mkdir -p "$HOME/.zsh"
-copy_item "$DOTFILES_DIR/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" "$HOME/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
-cp -rf "$DOTFILES_DIR/zsh/zsh-vi-mode" "$HOME/.zsh"
 
 mkdir -p "$HOME/.local/bin"
 for f in "$DOTFILES_DIR"/scripts/*; do
