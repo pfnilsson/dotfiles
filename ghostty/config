@@ -25,3 +25,18 @@ quick-terminal-autohide = false
 
 # make text in block cursor black
 cursor-text = #000000
+
+# hide title text
+title = " "
+
+# new tab with ctrl+shift+t
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+t=ignore
+
+# close tab with ctrl+shift+w
+keybind = ctrl+shift+w=close_tab
+
+# swap tabs with ctrl+tab and ctrl+shift+tab
+keybind = ctrl+tab=next_tab
+keybind = ctrl+shift+tab=previous_tab
+
