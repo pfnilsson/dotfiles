@@ -39,3 +39,4 @@ keybind = ctrl+shift+w=close_tab
 # swap tabs with ctrl+tab and ctrl+shift+tab
 keybind = ctrl+tab=next_tab
 keybind = ctrl+shift+tab=previous_tab
+keybind = shift+enter=text:\x1b\r

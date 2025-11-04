@@ -8,6 +8,11 @@ return {
 				backend = "tmux",
 				enabled = false,
 			},
+			tools = {
+				claude = {
+					cmd = { "devbox", "ai" },
+				},
+			},
 		},
 	},
 	keys = {

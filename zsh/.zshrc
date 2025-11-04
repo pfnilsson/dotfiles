@@ -138,6 +138,7 @@ alias brg="gazelle"
 alias btd="bazel test //nodes/platform/decisionsystems/... --test_output=errors --test_tag_filters="
 alias bmt="bazel run //:go -- mod tidy -e"
 alias bf="bazel run :gofmt --"
+alias claude="devbox ai"
 
 bt() {
   local dir=${1:h}
