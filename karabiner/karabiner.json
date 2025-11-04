@@ -1656,7 +1656,8 @@
                                             "^co\\.zeit\\.hyper$",
                                             "^io\\.alacritty$",
                                             "^net\\.kovidgoyal\\.kitty$",
-                                            "^tv\\.parsec\\.www$"
+                                            "^tv\\.parsec\\.www$",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }

@@ -234,9 +234,24 @@ return {
 				end,
 				desc = "File Explorer",
 			},
+			{
+				"<leader>gi",
+				function()
+					Snacks.picker.gh_issue()
+				end,
+				desc = "GitHub Issues (open)",
+			},
+			{
+				"<leader>gP",
+				function()
+					Snacks.picker.gh_pr()
+				end,
+				desc = "GitHub Pull Requests (open)",
+			},
 		},
 		opts = {
 			input = { enable = true },
+			gh = {},
 			gitbrowse = {
 				open = function(url)
 					local mode = vim.fn.mode()
@@ -314,6 +329,8 @@ return {
 							},
 						},
 					},
+					gh_issue = {},
+					gh_pr = {},
 				},
 			},
 		},
