@@ -7,6 +7,13 @@ return {
 			{
 				"<leader>gx",
 				function()
+					Snacks.gitbrowse.open({ branch = "main" })
+				end,
+				mode = { "n", "v" },
+			},
+			{
+				"<leader>gX",
+				function()
 					Snacks.gitbrowse.open()
 				end,
 				mode = { "n", "v" },
