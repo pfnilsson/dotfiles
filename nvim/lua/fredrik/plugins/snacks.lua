@@ -7,7 +7,7 @@ return {
 			{
 				"<leader>gx",
 				function()
-					Snacks.gitbrowse.open({ branch = "main" })
+					Snacks.gitbrowse.open({ branch = "HEAD" })
 				end,
 				mode = { "n", "v" },
 			},
