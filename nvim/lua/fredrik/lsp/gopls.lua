@@ -22,7 +22,7 @@ local function gopackagedriver_root()
 	return util.root_pattern("scripts/gopackagesdriver.sh")(vim.fn.getcwd())
 end
 
-local DRIVER_PACKAGE = "nodes/platform/decisionsystems/..."
+local DRIVER_PACKAGE = "nodes/foundations/decisionsystems/..."
 local gopls_defaults = {
 	analyses = { unusedparams = true, unusedwrite = true },
 	staticcheck = true,

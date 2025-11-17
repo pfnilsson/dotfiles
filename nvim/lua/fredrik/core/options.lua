@@ -18,6 +18,9 @@ vim.opt.scrolloff = 5
 
 -- no line wrapping
 vim.opt.wrap = false
+vim.opt.linebreak = false
+vim.opt.breakindent = false
+vim.opt.textwidth = 0
 
 -- store undo history
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
