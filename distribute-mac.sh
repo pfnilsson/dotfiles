@@ -56,6 +56,7 @@ fi
 # gitignore -> ~/.config/git/ignore
 if [[ -f "$SCRIPT_DIR/git/ignore" ]]; then
   cp "$SCRIPT_DIR/git/ignore" "$HOME/.config/git/ignore"
+  git config --global core.excludesFile "$HOME/.config/git/ignore"
   echo "✓ git/ignore"
 fi
 

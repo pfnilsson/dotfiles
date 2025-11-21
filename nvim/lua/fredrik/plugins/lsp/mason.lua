@@ -21,7 +21,7 @@ return {
 		})
 
 		---@diagnostic disable-next-line: missing-fields
-		mason_lspconfig.setup({ ensure_installed = registry.servers })
+		mason_lspconfig.setup({ ensure_installed = registry.servers, automatic_enable = false })
 		mason_tool_installer.setup({ ensure_installed = registry.tools })
 	end,
 }

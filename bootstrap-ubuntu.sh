@@ -96,6 +96,7 @@ echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
 cp -rf "$DOTFILES_DIR/nvim" "$HOME/.config"
+git config --global core.excludesFile "$HOME/.config/git/ignore"
 
 mkdir -p "$HOME/.config/ghostty"
 copy_item "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"

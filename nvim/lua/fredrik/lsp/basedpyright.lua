@@ -20,7 +20,6 @@ end
 function M.setup(capabilities)
 	vim.lsp.config("basedpyright", {
 		capabilities = capabilities,
-
 		before_init = function(params, config)
 			local root = params.rootUri and vim.uri_to_fname(params.rootUri) or vim.loop.cwd()
 			config.settings = config.settings or {}
@@ -29,7 +28,22 @@ function M.setup(capabilities)
 				config.settings.python.pythonPath = detect_python(root)
 			end
 		end,
+		root_dir = function(bufnr, on_dir)
+			local fname = vim.api.nvim_buf_get_name(bufnr)
 
+			-- Don't create new LSP instances for files in bazel directories
+			if fname:match("bazel%-") or fname:match("/_bazel_") or fname:match("/private/var/tmp/") then
+				return -- Don't call on_dir, just return early
+			end
+
+			-- Find root using normal pattern
+			local util = require("lspconfig.util")
+			local root = util.root_pattern("pyproject.toml", "pyrightconfig.json", ".git")(fname)
+
+			if root then
+				on_dir(root)
+			end
+		end,
 		settings = {
 			basedpyright = {
 				disableOrganizeImports = true,
@@ -37,7 +51,7 @@ function M.setup(capabilities)
 					typeCheckingMode = "standard",
 					autoSearchPaths = true,
 					useLibraryCodeForTypes = true,
-					diagnosticsMode = "workspace",
+					diagnosticsMode = "openFilesOnly",
 					autoImportCompletions = true,
 					enableTypeIgnoreComments = false,
 					diagnosticSeverityOverrides = {
