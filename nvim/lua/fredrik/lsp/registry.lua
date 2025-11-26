@@ -10,6 +10,7 @@ M.servers = {
 	"sqls",
 	"terraformls",
 	"ruff",
+	"zls",
 }
 
 M.tools = {
