@@ -2,7 +2,7 @@
 local M = {}
 
 -- Ensure ~/notes directory exists
-local notes_dir = vim.fn.expand("~/notes")
+local notes_dir = vim.fn.expand("~/.notes")
 if vim.fn.isdirectory(notes_dir) == 0 then
 	vim.fn.mkdir(notes_dir, "p")
 end
