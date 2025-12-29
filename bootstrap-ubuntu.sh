@@ -34,12 +34,38 @@ sudo apt update
 sudo apt install -y xclip xsel
 
 echo "Installing fzf"
-sudo apt update
-sudo apt install fzf -y
+FZF_DIR="$HOME/.fzf"
+if [ ! -d "$FZF_DIR" ]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git "$FZF_DIR"
+fi
+
+# Run the install script non-interactively (only installs binaries, no shell config changes)
+"$FZF_DIR/install" --bin --no-update-rc --no-bash --no-fish
+
+# Ensure fzf is on PATH via ~/.local/bin
+mkdir -p "$HOME/.local/bin"
+ln -sf "$FZF_DIR/bin/fzf" "$HOME/.local/bin/fzf"
+
+# Add ~/.local/bin to PATH if not already there
+if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+echo "Installing claude code"
+curl -fsSL https://claude.ai/install.sh | bash
 
 echo "Installing ripgrep"
 sudo apt update
 sudo apt install ripgrep
+
+echo "Installing fd"
+sudo apt update
+sudo apt install fd-find
+
+# Create symlink for fd only if it does not already exist
+if ! command -v fd >/dev/null 2>&1; then
+    ln -s "$(command -v fdfind)" "$HOME/.local/bin/fd"
+fi
 
 # --- 3) Install Node.js + npm ---
 if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
