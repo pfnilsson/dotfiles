@@ -73,6 +73,8 @@ return {
 						format = "file",
 						show_empty = true,
 						supports_live = true,
+						hidden = true,
+						ignored = true,
 					})
 				end,
 				desc = "Find Files",
@@ -87,7 +89,7 @@ return {
 			{
 				"<leader>/",
 				function()
-					Snacks.picker.grep()
+					Snacks.picker.grep({ hidden = true, ignored = true })
 				end,
 				desc = "Grep",
 			},
@@ -180,6 +182,8 @@ return {
 				"<leader>e",
 				function()
 					Snacks.picker.explorer({
+						hidden = true,
+						ignored = true,
 						finder = "explorer",
 						sort = { fields = { "sort" } },
 						supports_live = true,

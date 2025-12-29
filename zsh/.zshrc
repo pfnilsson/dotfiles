@@ -163,3 +163,4 @@ bindkey '^R' history-incremental-search-backward
 # Add go to path
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin/
 
+export PATH="$HOME/go/bin:$PATH"
