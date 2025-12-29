@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Set directory of this file to SCRIPT_DIR 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

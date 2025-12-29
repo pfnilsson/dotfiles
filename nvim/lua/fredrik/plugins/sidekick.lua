@@ -10,7 +10,7 @@ return {
 			},
 			tools = {
 				claude = {
-					cmd = { "devbox", "ai" },
+					cmd = vim.fn.has("mac") == 1 and { "devbox", "ai" } or { "claude" },
 				},
 			},
 		},
