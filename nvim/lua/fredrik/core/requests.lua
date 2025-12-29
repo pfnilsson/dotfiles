@@ -12,6 +12,41 @@ M.win_id = nil -- main request editor window
 M.result_win_id = nil -- result popup window
 M.env = {} -- extra env vars passed to requests
 
+-- Load environment variables from .env file in cwd if it exists
+local function load_env_file()
+	local env_path = vim.fn.getcwd() .. "/.env"
+	if vim.fn.filereadable(env_path) ~= 1 then
+		return
+	end
+
+	local lines = vim.fn.readfile(env_path)
+	for _, line in ipairs(lines) do
+		-- Skip empty lines and comments
+		local trimmed = line:match("^%s*(.-)%s*$")
+		if trimmed ~= "" and not trimmed:match("^#") then
+			-- Match KEY=VALUE or export KEY=VALUE (value can be quoted or unquoted)
+			local key, value = trimmed:match("^export%s+([%w_]+)%s*=%s*(.*)$")
+			if not key then
+				key, value = trimmed:match("^([%w_]+)%s*=%s*(.*)$")
+			end
+			if key and value then
+				-- Strip surrounding quotes if present
+				value = value:match("^[\"'](.*)[\"']$") or value
+				M.env[key] = value
+			end
+		end
+	end
+end
+
+local env_loaded = false
+local function ensure_env_loaded()
+	if env_loaded then
+		return
+	end
+	env_loaded = true
+	load_env_file()
+end
+
 ----------------------------------------------------------------------
 -- Generic helpers
 ----------------------------------------------------------------------
@@ -415,6 +450,23 @@ end
 -- Request editor window
 ----------------------------------------------------------------------
 
+-- Show current env vars
+function M.show_env()
+	local keys = vim.tbl_keys(M.env)
+	if #keys == 0 then
+		local env_path = vim.fn.getcwd() .. "/.env"
+		echo_status("[requests] no env vars set (looking for " .. env_path .. ")")
+		return
+	end
+
+	table.sort(keys)
+	local lines = {}
+	for _, k in ipairs(keys) do
+		table.insert(lines, string.format("%s=%s", k, M.env[k]))
+	end
+	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO)
+end
+
 -- Add an env var via <leader>rv inside the request window
 function M.add_env_var()
 	vim.ui.input({ prompt = "Env var name: " }, function(name)
@@ -437,6 +489,7 @@ function M.add_env_var()
 end
 
 local function open_file_in_float(path)
+	ensure_env_loaded()
 	local buf = vim.fn.bufadd(path)
 	vim.fn.bufload(buf)
 
@@ -614,4 +667,8 @@ end, { noremap = true, silent = true, desc = "Requests: send current block" })
 vim.keymap.set("n", "<leader>rd", function()
 	M.delete_current_file()
 end, { noremap = true, silent = true, desc = "Requests: delete current file" })
+
+vim.keymap.set("n", "<leader>rV", function()
+	M.show_env()
+end, { noremap = true, silent = true, desc = "Requests: show env vars" })
 return M
