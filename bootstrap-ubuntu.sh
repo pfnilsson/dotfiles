@@ -51,7 +51,7 @@ if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
-echo "Installing claude code"
+echo "Installing/updating claude code..."
 curl -fsSL https://claude.ai/install.sh | bash
 
 echo "Installing ripgrep"
@@ -89,7 +89,13 @@ if ! command -v go >/dev/null; then
     rm "/tmp/go${GO_VERSION}.tar.gz"
 fi
 
-# --- 5) Install Lazygit ---
+# --- 5) Install golangci-lint ---
+if ! command -v golangci-lint >/dev/null; then
+    echo "Installing golangci-lint..."
+    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$HOME/.local/bin"
+fi
+
+# --- 6) Install Lazygit ---
 if ! command -v lazygit >/dev/null; then
     echo "Installing Lazygit..."
     LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
@@ -103,7 +109,7 @@ if ! command -v lazygit >/dev/null; then
     rm /tmp/lazygit /tmp/lazygit.tar.gz
 fi
 
-# --- 6) Install uv (standalone) ---
+# --- 7) Install uv (standalone) ---
 if ! command -v uv >/dev/null; then
     echo "Installing uv (standalone)..."
     curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
@@ -114,10 +120,10 @@ if ! grep -qs 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.zshrc"; then
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
 fi
 
-# --- 7) Install python deps
+# --- 8) Install python deps
 sudo apt install -y python3-venv python3-pip
 
-# --- 8) Copy dotfiles ---
+# --- 9) Copy dotfiles ---
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
