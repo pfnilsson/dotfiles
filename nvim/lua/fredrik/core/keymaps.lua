@@ -220,15 +220,6 @@ vim.keymap.set("i", "<C-o>", "<C-o>", { noremap = true, silent = true })
 -- <C-d> deletes a character to the right in insert mode (like <Del>)
 vim.keymap.set("i", "<C-d>", "<C-o>x", { noremap = true, silent = true })
 
--- Disable arrows & delete
-local keys_to_disable = { "<Up>", "<Down>", "<Left>", "<Right>", "<Del>" }
-local modes = { "n", "i", "v", "t" }
-for _, mode in ipairs(modes) do
-	for _, key in ipairs(keys_to_disable) do
-		vim.keymap.set(mode, key, "<Nop>", { noremap = true, silent = true })
-	end
-end
-
 -- Escape removes search highlighting in normal mode
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
