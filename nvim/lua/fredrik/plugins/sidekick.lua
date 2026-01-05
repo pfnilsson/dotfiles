@@ -4,6 +4,11 @@ return {
 	opts = {
 		nes = { enabled = false },
 		cli = {
+			win = {
+				split = {
+					width = 95,
+				},
+			},
 			mux = {
 				backend = "tmux",
 				enabled = false,
