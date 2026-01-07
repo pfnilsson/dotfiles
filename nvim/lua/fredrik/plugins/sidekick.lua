@@ -59,7 +59,14 @@ return {
 			desc = "Sidekick Toggle Claude",
 			mode = { "n", "t", "i", "x" },
 		},
-
+		{
+			"<S-F12>", -- duplicate to accept F24 or S-F12 depending on what is sent by terminal
+			function()
+				require("sidekick.cli").toggle({ name = "claude", focus = true })
+			end,
+			desc = "Sidekick Toggle Claude",
+			mode = { "n", "t", "i", "x" },
+		},
 		{
 			"<leader>aa",
 			function()

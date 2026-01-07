@@ -224,8 +224,9 @@ vim.keymap.set("i", "<C-d>", "<C-o>x", { noremap = true, silent = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
 -- set alt_gr/right_option + the key left of backspace to toggle alternate buffer
--- even tho its S-F11 bound neovim interprets it as <F23>
-vim.keymap.set("n", "<F23>", ":b#<CR>", { noremap = true, silent = true })
+for _, lhs in ipairs({ "<F23>", "<S-F11>" }) do
+	vim.keymap.set("n", lhs, ":b#<CR>", { noremap = true, silent = true })
+end
 
 -- Quit with <leader>Q
 vim.keymap.set("n", "<leader>Q", ":q<CR>")
