@@ -23,10 +23,11 @@ if [[ -f "$SCRIPT_DIR/scripts/tmuxrun" ]]; then
   echo "✓ tmuxrun"
 fi
 
-# ghostty config -> ~/.config/ghostty/config
-if [[ -f "$SCRIPT_DIR/ghostty/config" ]]; then
-  cp "$SCRIPT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
-  echo "✓ ghostty/config"
+# ghostty config -> ~/.config/ghostty/
+if [[ -d "$SCRIPT_DIR/ghostty" ]]; then
+  mkdir -p "$HOME/.config/ghostty"
+  cp -a "$SCRIPT_DIR/ghostty/." "$HOME/.config/ghostty/"
+  echo "✓ ghostty/*"
 fi
 
 # karabiner -> ~/.config/karabiner/karabiner.json

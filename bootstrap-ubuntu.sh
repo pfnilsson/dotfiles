@@ -132,6 +132,7 @@ git config --global core.excludesFile "$HOME/.config/git/ignore"
 
 mkdir -p "$HOME/.config/ghostty"
 copy_item "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
+copy_item "$DOTFILES_DIR/ghostty/shared.conf" "$HOME/.config/ghostty/shared.conf"
 
 cp -rf "$DOTFILES_DIR/tmux" "$HOME/.config"
 
