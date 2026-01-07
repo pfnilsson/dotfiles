@@ -11,9 +11,6 @@ font-feature = -dlig
 # set theme
 theme = Catppuccin Mocha
 
-# set color space
-window-colorspace = display-p3
-
 # disable animations
 quick-terminal-animation-duration = 0
 
