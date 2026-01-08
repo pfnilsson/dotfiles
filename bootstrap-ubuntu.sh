@@ -127,14 +127,14 @@ sudo apt install -y python3-venv python3-pip
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
-cp -rf "$DOTFILES_DIR/nvim" "$HOME/.config"
+rsync -a --delete "$DOTFILES_DIR/nvim/" "$HOME/.config/nvim/"
 git config --global core.excludesFile "$HOME/.config/git/ignore"
 
 mkdir -p "$HOME/.config/ghostty"
 copy_item "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 copy_item "$DOTFILES_DIR/ghostty/shared.conf" "$HOME/.config/ghostty/shared.conf"
 
-cp -rf "$DOTFILES_DIR/tmux" "$HOME/.config"
+rsync -a --delete "$DOTFILES_DIR/tmux/" "$HOME/.config/tmux/"
 
 copy_item "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 
