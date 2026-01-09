@@ -648,6 +648,34 @@ function M.open_requests()
 	end)
 end
 
+function M.pop_result_buffer()
+	if not M.result_win_id or not vim.api.nvim_win_is_valid(M.result_win_id) then
+		vim.notify("No result window open", vim.log.levels.WARN)
+		return
+	end
+
+	local buf = vim.api.nvim_win_get_buf(M.result_win_id)
+	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+	local ft = vim.bo[buf].filetype
+
+	-- Close both floating windows
+	M.close_all()
+
+	-- Create a new regular buffer
+	local new_buf = vim.api.nvim_create_buf(true, false)
+	vim.api.nvim_buf_set_lines(new_buf, 0, -1, false, lines)
+
+	local name = string.format("[Response %s]", os.date("%H:%M:%S"))
+	pcall(vim.api.nvim_buf_set_name, new_buf, name)
+
+	if ft and ft ~= "" then
+		vim.bo[new_buf].filetype = ft
+	end
+
+	-- Show in current window (now that floats are gone)
+	vim.api.nvim_win_set_buf(0, new_buf)
+end
+
 ----------------------------------------------------------------------
 -- Keymaps
 ----------------------------------------------------------------------
@@ -671,4 +699,9 @@ end, { noremap = true, silent = true, desc = "Requests: delete current file" })
 vim.keymap.set("n", "<leader>rV", function()
 	M.show_env()
 end, { noremap = true, silent = true, desc = "Requests: show env vars" })
+
+vim.keymap.set("n", "<leader>rp", function()
+	M.pop_result_buffer()
+end, { noremap = true, silent = true, desc = "Requests: pop result to buffer" })
+
 return M
