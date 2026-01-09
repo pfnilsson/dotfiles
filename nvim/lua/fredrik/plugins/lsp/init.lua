@@ -11,6 +11,17 @@ return {
 		{ "folke/snacks.nvim" },
 	},
 	config = function()
+		if vim.fn.has("linux") == 1 then
+			require("fredrik.lsp.external_watch").setup({
+				debounce_ms = 200,
+				ignored_dirs = {
+					["dist"] = true,
+					["build"] = true,
+					[".direnv"] = true,
+				},
+			})
+		end
+
 		local S = require("fredrik.lsp.shared").init()
 		local registry = require("fredrik.lsp.registry")
 		local custom, defaults = registry.partition()
