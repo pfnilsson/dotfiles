@@ -29,6 +29,11 @@ function zvm_after_init() {
 
     # Ctrl+Y to accept autosuggestions (must be set after zsh-vi-mode loads)
     bindkey '^Y' autosuggest-accept
+
+    # Open command in editor
+    autoload -Uz edit-command-line
+    zle -N edit-command-line
+    bindkey '^x^e' edit-command-line
 }
 
 # Add Zinit plugins
