@@ -3,7 +3,7 @@
 if [[ $# -ge 1 ]]; then
   selected=$1
 else
-  selected=$(fd -t d -d 1 -a . ~/Projects ~/.config ~/Documents/GitHub 2>/dev/null | fzf) || exit 0
+  selected=$(fd -t d -d 1 -a . ~/Projects ~/.config 2>/dev/null | fzf) || exit 0
 fi
 [[ -n ${selected:-} ]] || exit 0
 
@@ -11,16 +11,16 @@ name=$(basename "$selected")
 name=${name//./_}
 name=${name//[!A-Za-z0-9_-]/_}
 
-if ! tmux has-session -t "$name" 2>/dev/null; then
+if ! tmux has-session -t "=$name" 2>/dev/null; then
   tmux new-session -s "$name" -c "$selected" -d -n nvim
-  tmux new-window  -t "$name":2 -c "$selected" -n terminal
-  tmux send-keys   -t "$name":1 "nvim" C-m
+  tmux new-window  -t "=$name":2 -c "$selected" -n terminal
+  tmux send-keys   -t "=$name":1 "nvim" C-m
 fi
 
 if [[ -n ${TMUX-} ]]; then
-  tmux switch-client -t "$name":1
+  tmux switch-client -t "=$name":1
 else
-  tmux select-window -t "$name":1
-  exec tmux attach-session -t "$name"
+  tmux select-window -t "=$name":1
+  exec tmux attach-session -t "=$name"
 fi
 
