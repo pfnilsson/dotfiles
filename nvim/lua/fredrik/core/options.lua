@@ -42,6 +42,10 @@ vim.opt.updatetime = 50
 -- use single statusline
 vim.opt.laststatus = 3
 
+-- use smartcase search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 -- Enable virtual text for diagnostics
 vim.diagnostic.config({
 	virtual_text = true,
