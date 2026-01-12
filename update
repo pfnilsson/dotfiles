@@ -9,6 +9,7 @@ cp ~/.local/bin/tmuxrun "$SCRIPT_DIR"/scripts/tmuxrun
 
 # Copy the ghostty config to /ghostty
 cp ~/.config/ghostty/config "$SCRIPT_DIR"/ghostty/config
+cp ~/.config/ghostty/shared.conf "$SCRIPT_DIR"/ghostty/shared.conf
 
 # Copy the karabiner elements config to /karabiner
 cp ~/.config/karabiner/karabiner.json "$SCRIPT_DIR"/karabiner/karabiner.json
