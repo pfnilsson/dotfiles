@@ -2,7 +2,7 @@ local M = {}
 
 M.servers = {
 	"lua_ls",
-	"basedpyright",
+	"ty",
 	"gopls",
 	"html",
 	"jsonls",
