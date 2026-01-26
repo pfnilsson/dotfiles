@@ -46,10 +46,13 @@ vim.opt.laststatus = 3
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- Enable virtual text for diagnostics
+-- enable virtual text for diagnostics
 vim.diagnostic.config({
 	virtual_text = true,
 	signs = true,
 	underline = true,
 	update_in_insert = false,
 })
+
+-- improve alignment for diff view
+vim.opt.diffopt:append({ "linematch:60" })
