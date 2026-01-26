@@ -68,7 +68,10 @@ return {
 	dependencies = { "folke/snacks.nvim" },
 	opts = {
 		terminal_cmd = vim.fn.has("mac") == 1 and "devbox ai" or "claude",
-		terminal = { split_width_percentage = 0.6 },
+		terminal = {
+			split_width_percentage = 0.6,
+			provider = "native",
+		},
 		diff_opts = {
 			layout = "vertical",
 			open_in_new_tab = true,
