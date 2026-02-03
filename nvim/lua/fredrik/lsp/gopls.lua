@@ -47,13 +47,12 @@ function M.setup(capabilities)
 		vim.lsp.config("gopls", {
 			capabilities = capabilities,
 			single_file_support = false,
-			cmd_env = { GOPACKAGESDRIVER_PACKAGE = DRIVER_PACKAGE, GOPACKAGESDRIVER_WORKSPACE_SCOPE = "" },
+			cmd_env = { GOPACKAGESDRIVER_PACKAGE = DRIVER_PACKAGE },
 			on_new_config = function(cfg, _)
 				cfg.settings = cfg.settings or {}
 				cfg.settings.gopls = vim.tbl_deep_extend("keep", cfg.settings.gopls or {}, gopls_defaults)
 				cfg.settings.gopls.env = vim.tbl_extend("force", cfg.settings.gopls.env or {}, {
 					GOPACKAGESDRIVER_PACKAGE = DRIVER_PACKAGE,
-					GOPACKAGESDRIVER_WORKSPACE_SCOPE = "",
 				})
 			end,
 			root_dir = function(bufnr, on_dir)
