@@ -11,6 +11,8 @@ M.servers = {
 	"terraformls",
 	"ruff",
 	"zls",
+	"svelte-language-server",
+	"vtsls",
 }
 
 M.tools = {
