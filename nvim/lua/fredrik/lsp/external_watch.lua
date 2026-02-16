@@ -63,6 +63,15 @@ local FT_MAP = {
 	-- Zig (zls)
 	zig = { ext = { "zig" }, name = { "build.zig", "build.zig.zon" } },
 
+	-- TypeScript / JavaScript (ts_ls)
+	typescript = { ext = { "ts", "tsx", "js", "jsx", "mjs", "cjs" }, name = { "tsconfig.json", "jsconfig.json", "package.json" } },
+	typescriptreact = { ext = { "ts", "tsx", "js", "jsx" }, name = { "tsconfig.json", "jsconfig.json" } },
+	javascript = { ext = { "ts", "tsx", "js", "jsx", "mjs", "cjs" }, name = { "tsconfig.json", "jsconfig.json", "package.json" } },
+	javascriptreact = { ext = { "ts", "tsx", "js", "jsx" }, name = { "tsconfig.json", "jsconfig.json" } },
+
+	-- Svelte (svelte)
+	svelte = { ext = { "svelte", "ts", "js" }, name = { "svelte.config.js", "svelte.config.ts", "package.json" } },
+
 	-- Common
 	yaml = { ext = { "yml", "yaml" } },
 	toml = { ext = { "toml" } },
