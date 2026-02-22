@@ -24,10 +24,12 @@ if ! command -v snap >/dev/null; then
 fi
 
 # --- 2) Install applications ---
-echo "Installing Neovim, Ghostty, Tmux via Snap..."
+echo "Installing Neovim & Tmux via Snap..."
 sudo snap install nvim --classic
-sudo snap install ghostty --classic
 sudo snap install tmux --classic
+
+echo "Installing Ghostty via .deb..."
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
 
 echo "Installing clipboard tools..."
 sudo apt update
