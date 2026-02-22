@@ -120,10 +120,17 @@ if ! grep -qs 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.zshrc"; then
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
 fi
 
-# --- 8) Install python deps
+# --- 8) Install Rust via rustup ---
+if ! command -v cargo >/dev/null; then
+    echo "Installing Rust via rustup..."
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+fi
+
+# --- 9) Install python deps
 sudo apt install -y python3-venv python3-pip
 
-# --- 9) Copy dotfiles ---
+# --- 10) Copy dotfiles ---
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
