@@ -51,8 +51,10 @@ if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
-echo "Installing/updating claude code..."
-curl -fsSL https://claude.ai/install.sh | bash
+if ! command -v claude >/dev/null; then
+    echo "Installing claude code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
 
 echo "Installing ripgrep"
 sudo apt update
