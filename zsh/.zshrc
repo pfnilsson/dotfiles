@@ -169,3 +169,19 @@ bindkey '^R' history-incremental-search-backward
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin/
 
 export PATH="$HOME/go/bin:$PATH"
+
+# Clone a repo as a bare clone with worktree layout
+git-clone-bare() {
+  local url=$1
+  local dir
+  dir=$(basename "$url" .git)
+  mkdir "$dir" && cd "$dir" || return 1
+  git clone --bare "$url" .bare
+  echo "gitdir: .bare" > .git
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git fetch origin
+  local main_branch
+  main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')
+  main_branch=${main_branch:-main}
+  git worktree add "$main_branch" "$main_branch"
+}
