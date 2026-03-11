@@ -96,25 +96,10 @@ curljq() {
 
 # Start nvim with a socket name per cwd
 nvim() {
-  local base="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
-  local socket="$base"
+  local socket="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
 
-  # If a socket file exists, check if a Neovim server is actually alive on it.
-  if [ -S "$base" ]; then
-    if command nvim --server "$base" --remote-expr 1 >/dev/null 2>&1; then
-      # Alive: pick a random-suffix socket name, keeping the first deterministic.
-      local base_noext="${base%.sock}" suffix
-      while :; do
-        suffix="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
-        socket="${base_noext}-${suffix}.sock"
-        [ ! -e "$socket" ] && break
-      done
-    else
-      # Stale socket: remove it so we can reuse the deterministic name.
-      rm -f -- "$base"
-      socket="$base"
-    fi
-  fi
+  # If anything exists there (stale socket after crash, etc.), nuke it.
+  rm -f -- "$socket" 2>/dev/null
 
   command nvim --listen "$socket" "$@"
 }
@@ -127,7 +112,7 @@ fi
 # gazelle utility function including restarting gopls 
 function gazelle() {
   if bazel run //:gazelle -- "$@"; then
-    local socket="/tmp/nvim-$(echo "$PWD" | tr '/' '_').sock"
+    local socket="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
     if nvr --servername "$socket" --nostart --remote-expr "v:true" &>/dev/null; then
       nvr --servername "$socket" --nostart -c 'LspRestart gopls' || true
       echo "✅ gopls restarted"
@@ -138,6 +123,7 @@ function gazelle() {
     echo "❌ gazelle failed"
   fi
 }
+
 # Bazel aliases
 alias brg="gazelle"
 alias btd="bazel test //nodes/platform/decisionsystems/... --test_output=errors --test_tag_filters="

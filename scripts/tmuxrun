@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+want_worktree=0
+if [[ ${1:-} == "--worktree" ]]; then
+  want_worktree=1
+  shift
+fi
+
 if [[ $# -ge 1 ]]; then
   selected=$1
 else
@@ -21,9 +27,19 @@ attach_session() {
   fi
 }
 
-create_session() {
+set_branch_from_dir() {
   local sname=$1 dir=$2
+  local b=""
+  b=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null) || b=""
+  [[ $b == "HEAD" ]] && b=""
+  tmux set-option -t "$sname" @branch "$b"
+}
+
+create_session() {
+  local sname=$1 dir=$2 branch=${3:-}
   tmux new-session -s "$sname" -c "$dir" -d -n nvim
+  tmux set-option -t "$sname" @repo_name "$name"
+  [[ -n $branch ]] && tmux set-option -t "$sname" @branch "$branch"
   tmux new-window  -t "=$sname":2 -c "$dir" -n terminal
   tmux send-keys   -t "=$sname":1 "nvim" C-m
 }
@@ -45,20 +61,28 @@ bare_create_worktree() {
 
   local wt_dir="$repo/$branch"
   if [[ ! -d "$wt_dir" ]]; then
-    git -C "$repo" worktree add "$wt_dir" "$branch" 2>/dev/null \
+    git -C "$repo" worktree add "$wt_dir" "$branch" \
       || git -C "$repo" worktree add -b "$branch" "$wt_dir" || exit 1
   fi
 
   local wt_name
   wt_name="$(sanitize_name "${sname}-${branch}")"
   if ! tmux has-session -t "=$wt_name" 2>/dev/null; then
-    create_session "$wt_name" "$wt_dir"
+    create_session "$wt_name" "$wt_dir" "$branch"
   fi
+
+  set_branch_from_dir "$wt_name" "$wt_dir"
   attach_session "$wt_name"
 }
 
 if [[ -d "$selected/.bare" ]]; then
   # --- bare-clone worktree path ---
+
+  if (( want_worktree )); then
+    bare_create_worktree "$selected" "$name"
+    exit 0
+  fi
+
   wt_paths=()
   while IFS= read -r line; do
     wt_paths+=("$line")
@@ -89,23 +113,19 @@ if [[ -d "$selected/.bare" ]]; then
   wt_dirname=$(basename "$wt_selected")
   sname="$(sanitize_name "${name}-${wt_dirname}")"
 
-  if tmux has-session -t "=$sname" 2>/dev/null; then
-    action=$(printf "attach\nworktree" | fzf --prompt="Session '$sname' exists > ") || exit 0
-    if [[ $action == "worktree" ]]; then
-      bare_create_worktree "$selected" "$name"
-    else
-      attach_session "$sname"
-    fi
-  else
-    create_session "$sname" "$wt_selected"
-    attach_session "$sname"
+  # CHANGED: default flow is just attach-or-create (no attach/worktree prompt)
+  if ! tmux has-session -t "=$sname" 2>/dev/null; then
+    create_session "$sname" "$wt_selected" "$wt_dirname"
   fi
+  set_branch_from_dir "$sname" "$wt_selected"
+  attach_session "$sname"
 
 else
   # --- non-bare: attach or create ---
   if ! tmux has-session -t "=$name" 2>/dev/null; then
     create_session "$name" "$selected"
   fi
+  set_branch_from_dir "$name" "$selected"
   attach_session "$name"
 fi
 
