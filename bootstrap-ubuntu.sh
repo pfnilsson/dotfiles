@@ -3,7 +3,6 @@ set -euo pipefail
 
 DOTFILES_DIR="$HOME/Projects/dotfiles"
 DOTFILES_DIR="$(readlink -f "$DOTFILES_DIR")"
-TS="$(date +%s)"
 
 echo "=== Ubuntu Bootstrap ==="
 echo "Dotfiles repo: $DOTFILES_DIR"
@@ -136,8 +135,13 @@ sudo apt install -y python3-venv python3-pip
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"
+copy_item "$DOTFILES_DIR/git/performance.conf" "$HOME/.config/git/performance.conf"
 rsync -a --delete "$DOTFILES_DIR/nvim/" "$HOME/.config/nvim/"
 git config --global core.excludesFile "$HOME/.config/git/ignore"
+
+if ! { git config --global --get-all include.path 2>/dev/null || true; } | grep -Fxq "$HOME/.config/git/performance.conf"; then
+    git config --global --add include.path "$HOME/.config/git/performance.conf"
+fi
 
 mkdir -p "$HOME/.config/ghostty"
 copy_item "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"

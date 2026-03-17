@@ -61,6 +61,18 @@ if [[ -f "$SCRIPT_DIR/git/ignore" ]]; then
   echo "✓ git/ignore"
 fi
 
+# git performance config -> ~/.config/git/performance.conf
+if [[ -f "$SCRIPT_DIR/git/performance.conf" ]]; then
+  cp "$SCRIPT_DIR/git/performance.conf" "$HOME/.config/git/performance.conf"
+
+  # Ensure the include exists once
+  if ! git config --global --get-all include.path | grep -Fxq "$HOME/.config/git/performance.conf"; then
+    git config --global --add include.path "$HOME/.config/git/performance.conf"
+  fi
+
+  echo "✓ git/performance.conf"
+fi
+
 # Rectangle settings (macOS) -> com.knollsoft.Rectangle
 if [[ -f "$SCRIPT_DIR/rectangle/RectangleSettings.plist" ]]; then
   if command -v defaults >/dev/null 2>&1; then
