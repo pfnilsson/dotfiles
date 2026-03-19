@@ -22,6 +22,7 @@ M.tools = {
 	"eslint_d",
 	"delve",
 	"copilot-language-server",
+	"gofumpt",
 }
 
 function M.partition()

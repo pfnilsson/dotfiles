@@ -26,7 +26,7 @@ local DRIVER_PACKAGE = "nodes/platform/decisionsystems/..."
 local gopls_defaults = {
 	analyses = { unusedparams = true, unusedwrite = true },
 	staticcheck = true,
-	gofumpt = true,
+	gofumpt = false, -- use standalone gofumpt (via mason) for newer version
 	usePlaceholders = false,
 	semanticTokens = true,
 	codelenses = {

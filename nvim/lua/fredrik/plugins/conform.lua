@@ -6,6 +6,7 @@ return {
 	---@type conform.setupOpts
 	opts = {
 		formatters_by_ft = {
+			go = { "gofumpt" },
 			python = { "isort", "black" },
 			sql = { "sleek" },
 			lua = { "stylua" },
