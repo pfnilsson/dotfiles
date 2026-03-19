@@ -15,11 +15,6 @@ return {
 				backend = "tmux",
 				enabled = false,
 			},
-			tools = {
-				claude = {
-					cmd = vim.fn.has("mac") == 1 and { "devbox", "ai" } or { "claude" },
-				},
-			},
 		},
 	},
 	keys = {
