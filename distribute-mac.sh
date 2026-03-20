@@ -73,6 +73,13 @@ if [[ -f "$SCRIPT_DIR/git/performance.conf" ]]; then
   echo "✓ git/performance.conf"
 fi
 
+# monorepo -> ~/.config/monorepo
+if [[ -d "$SCRIPT_DIR/monorepo" ]]; then
+  mkdir -p "$HOME/.config/monorepo"
+  cp -a "$SCRIPT_DIR/monorepo/." "$HOME/.config/monorepo/"
+  echo "✓ monorepo/*"
+fi
+
 # Rectangle settings (macOS) -> com.knollsoft.Rectangle
 if [[ -f "$SCRIPT_DIR/rectangle/RectangleSettings.plist" ]]; then
   if command -v defaults >/dev/null 2>&1; then

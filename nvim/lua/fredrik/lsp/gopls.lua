@@ -49,6 +49,7 @@ function M.setup(capabilities)
 			cmd_env = {
 				GOPACKAGESDRIVER_PEDREGAL_FORK = "true",
 				GOPACKAGESDRIVER_PER_WORKTREE_SERVER = "true",
+				GOPACKAGESDRIVER_WORKSPACE_SCOPE_FILE = vim.env.HOME .. "/.config/monorepo/scope",
 			},
 			on_new_config = function(cfg, _)
 				cfg.settings = cfg.settings or {}
