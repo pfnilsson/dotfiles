@@ -22,7 +22,6 @@ local function gopackagedriver_root()
 	return util.root_pattern("scripts/gopackagesdriver.sh")(vim.fn.getcwd())
 end
 
-local DRIVER_PACKAGE = "nodes/platform/decisionsystems/..."
 local gopls_defaults = {
 	analyses = { unusedparams = true, unusedwrite = true },
 	staticcheck = true,
@@ -47,13 +46,13 @@ function M.setup(capabilities)
 		vim.lsp.config("gopls", {
 			capabilities = capabilities,
 			single_file_support = false,
-			cmd_env = { GOPACKAGESDRIVER_PACKAGE = DRIVER_PACKAGE },
+			cmd_env = {
+				GOPACKAGESDRIVER_PEDREGAL_FORK = "true",
+				GOPACKAGESDRIVER_PER_WORKTREE_SERVER = "true",
+			},
 			on_new_config = function(cfg, _)
 				cfg.settings = cfg.settings or {}
 				cfg.settings.gopls = vim.tbl_deep_extend("keep", cfg.settings.gopls or {}, gopls_defaults)
-				cfg.settings.gopls.env = vim.tbl_extend("force", cfg.settings.gopls.env or {}, {
-					GOPACKAGESDRIVER_PACKAGE = DRIVER_PACKAGE,
-				})
 			end,
 			root_dir = function(bufnr, on_dir)
 				on_dir(
