@@ -1,3 +1,7 @@
+vim.api.nvim_create_user_command("PackUpdate", function()
+	vim.pack.update()
+end, {})
+
 -- Build hooks MUST be defined before vim.pack.add()
 vim.api.nvim_create_autocmd("PackChanged", {
 	callback = function(ev)
