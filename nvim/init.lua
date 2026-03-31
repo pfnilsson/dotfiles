@@ -1,2 +1,3 @@
+vim.loader.enable()
 require("fredrik.core")
-require("fredrik.lazy")
+require("fredrik.pack")
