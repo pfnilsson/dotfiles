@@ -317,7 +317,9 @@ end, { desc = "Copy file path relative to cwd to clipboard" })
 
 -- Undotree (native in Neovim 0.12, opt package)
 vim.cmd.packadd("nvim.undotree")
-vim.keymap.set("n", "<leader>u", "<cmd>Undotree<CR>", { desc = "Toggle Undotree" })
+vim.keymap.set("n", "<leader>u", function()
+	require("undotree").open({ command = math.floor(vim.api.nvim_win_get_width(0) / 4) .. "vnew" })
+end, { desc = "Toggle Undotree" })
 
 -- <Esc><Esc> enters normal mode in terminal
 vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Terminal normal" })
