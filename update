@@ -4,9 +4,6 @@ set -euo pipefail
 # Set directory of this file to SCRIPT_DIR 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Copy the tmuxrun script to /scripts
-cp ~/.local/bin/tmuxrun "$SCRIPT_DIR"/scripts/tmuxrun
-
 # Copy the ghostty config to /ghostty
 cp ~/.config/ghostty/config "$SCRIPT_DIR"/ghostty/config
 cp ~/.config/ghostty/shared.conf "$SCRIPT_DIR"/ghostty/shared.conf

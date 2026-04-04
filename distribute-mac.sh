@@ -16,13 +16,6 @@ mkdir -p "$HOME/.zsh"
 
 echo "Restoring dotfiles and configs from repo to system…"
 
-# tmuxrun -> ~/.local/bin
-if [[ -f "$SCRIPT_DIR/scripts/tmuxrun" ]]; then
-  cp "$SCRIPT_DIR/scripts/tmuxrun" "$HOME/.local/bin/tmuxrun"
-  chmod +x "$HOME/.local/bin/tmuxrun" || true
-  echo "✓ tmuxrun"
-fi
-
 # ghostty config -> ~/.config/ghostty/
 if [[ -d "$SCRIPT_DIR/ghostty" ]]; then
   mkdir -p "$HOME/.config/ghostty"
