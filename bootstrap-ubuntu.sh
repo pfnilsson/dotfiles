@@ -131,7 +131,16 @@ fi
 # --- 9) Install python deps
 sudo apt install -y python3-venv python3-pip
 
-# --- 10) Copy dotfiles ---
+# --- 10) Build dependencies
+sudo apt install -y build-essential libclang-dev
+
+# --- 11) Install treesitter cli
+if ! command -v tree-sitter >/dev/null; then
+    echo "Installing tree-sitter CLI..."
+    cargo install tree-sitter-cli
+fi
+
+# --- 12) Copy dotfiles ---
 echo "Copying dotfiles..."
 
 copy_item "$DOTFILES_DIR/git/ignore" "$HOME/.config/git/ignore"

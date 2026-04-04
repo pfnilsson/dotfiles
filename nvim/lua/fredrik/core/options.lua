@@ -56,3 +56,5 @@ vim.diagnostic.config({
 
 -- improve alignment for diff view
 vim.opt.diffopt:append({ "linematch:60" })
+
+require("vim._core.ui2").enable({})
