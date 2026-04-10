@@ -54,6 +54,9 @@ vim.diagnostic.config({
 	update_in_insert = false,
 })
 
+-- make Ctrl+x & ctrl+a unsigned
+vim.o.nrformats = "unsigned"
+
 -- improve alignment for diff view
 vim.opt.diffopt:append({ "linematch:60" })
 
