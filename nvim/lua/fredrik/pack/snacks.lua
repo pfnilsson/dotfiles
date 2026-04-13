@@ -54,6 +54,8 @@ require("snacks").setup({
 						end,
 						mode = { "i", "n" },
 					},
+					["gi"] = { "toggle_ignored", mode = { "n" } },
+					["gh"] = { "toggle_hidden", mode = { "n" } },
 				},
 			},
 		},
@@ -117,15 +119,13 @@ vim.keymap.set("n", "<leader><space>", function()
 		format = "file",
 		show_empty = true,
 		supports_live = true,
-		hidden = true,
-		ignored = true,
 	})
 end, { desc = "Find Files" })
 vim.keymap.set("n", "<leader>gd", function()
 	Snacks.picker.git_diff()
 end, { desc = "Git Diff (Hunks)" })
 vim.keymap.set("n", "<leader>/", function()
-	Snacks.picker.grep({ hidden = true, ignored = true })
+	Snacks.picker.grep()
 end, { desc = "Grep" })
 vim.keymap.set("n", "<leader>b", function()
 	Snacks.picker.buffers({
