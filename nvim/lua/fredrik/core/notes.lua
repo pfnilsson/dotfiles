@@ -220,6 +220,10 @@ function M.delete_current()
 		local newname = notes_dir .. "/" .. num .. "_" .. item.name .. ".txt"
 		if item.path ~= newname then
 			vim.fn.rename(item.path, newname)
+			if item.buf and vim.api.nvim_buf_is_loaded(item.buf) then
+				vim.api.nvim_buf_set_name(item.buf, newname)
+				vim.bo[item.buf].modified = false
+			end
 			item.path = newname
 		end
 	end
