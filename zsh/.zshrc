@@ -94,38 +94,13 @@ curljq() {
   fi
 }
 
-# Start nvim with a socket name per cwd
-nvim() {
-  local socket="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
-
-  # If anything exists there (stale socket after crash, etc.), nuke it.
-  rm -f -- "$socket" 2>/dev/null
-
-  command nvim --listen "$socket" "$@"
-}
-
 # Java env init
 if command -v jenv >/dev/null 2>&1; then
     eval "$(jenv init -)"
 fi
 
-# gazelle utility function including restarting gopls 
-function gazelle() {
-  if bazel run //:gazelle -- "$@"; then
-    local socket="/tmp/nvim-$(tr '/' '_' <<<"$PWD").sock"
-    if nvr --servername "$socket" --nostart --remote-expr "v:true" &>/dev/null; then
-      nvr --servername "$socket" --nostart -c 'lsp restart gopls' || true
-      echo "✅ gopls restarted"
-    else
-      echo "⚠️ Neovim isn’t running or listening at $socket"
-    fi
-  else
-    echo "❌ gazelle failed"
-  fi
-}
-
 # Bazel aliases
-alias brg="gazelle"
+alias brg="bazel run //:gazelle --"
 alias btd="bazel test //nodes/platform/decisionsystems/... --test_output=errors --test_tag_filters="
 alias bmt="bazel run //:go -- mod tidy -e"
 alias bf="bazel run :gofmt --"
