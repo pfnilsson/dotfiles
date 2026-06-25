@@ -9,6 +9,9 @@ local function diff_source()
 	end
 end
 
+local gpd = require("fredrik.gpd_status")
+gpd.setup()
+
 require("lualine").setup({
 	options = {
 		theme = "auto",
@@ -31,7 +34,7 @@ require("lualine").setup({
 				},
 			},
 		},
-		lualine_x = { "encoding", "fileformat", "filetype" },
+		lualine_x = { gpd.lualine_component(), "encoding", "fileformat", "filetype" },
 		lualine_y = { "progress" },
 		lualine_z = { "location" },
 	},
