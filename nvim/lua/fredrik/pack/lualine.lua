@@ -9,7 +9,7 @@ local function diff_source()
 	end
 end
 
-local gpd = require("fredrik.gpd_status")
+local gpd = require("fredrik.lsp.gpd_status")
 gpd.setup()
 
 require("lualine").setup({
