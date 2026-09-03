@@ -15,18 +15,20 @@ M.opts = {
 	notify_on_fail = true, -- one-shot vim.notify when state transitions into failure
 }
 
--- state: "fail" | "building" | "ok" | "off" | "none" | "idle" | "unknown"
---   fail     daemon is alive and its most recent build failed  (the actionable alarm)
+-- state: "fail" | "partial" | "building" | "ok" | "off" | "none" | "idle" | "unknown"
+--   fail     daemon is alive but has served NO successful load since it started (wedged — the actionable alarm)
+--   partial  daemon is alive and serving; the most recent build failed but an earlier load succeeded (some packages degraded)
 --   building daemon is alive and a build is in flight
 --   ok       daemon is alive and its most recent build succeeded
 --   off      daemon is not running (killed / not yet spawned) — recovering, not a failure
 M.state = "unknown"
 M.log_path = nil
 
--- Reproduces scripts/gopackagesdriver.sh's worktree-hash + log/pid lookup. Reports the
--- last build outcome in the log tail, but ONLY as a live state when the daemon is
--- actually running — a dead daemon reads as "off" so a stale failure in the log (e.g.
--- right after you kill the daemon to recover) doesn't keep alarming. $1 = workspace dir.
+-- Reproduces scripts/gopackagesdriver.sh's worktree-hash + log/pid lookup, then reads the
+-- build outcome from the log tail — but ONLY as a live state when the daemon is actually
+-- running (a dead daemon reads as "off", so a stale failure right after a kill doesn't keep
+-- alarming). A trailing failure while the daemon is still serving successful loads is
+-- reported as "partial" (some packages degraded), not "fail". $1 = workspace dir.
 local DETECT = [[
 dir="$1"
 cache="${XDG_CACHE_HOME:-$HOME/.cache}/gopackagesdriver"
@@ -45,13 +47,32 @@ if [ -f "$pidf" ]; then
   [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null && alive=yes
 fi
 if [ ! -f "$log" ]; then echo none; printf '%s\n' "$log"; exit 0; fi
-m=$(tail -n 1500 "$log" | grep -aoE "Build: completed,|Build did NOT complete successfully|Build: bazel build via target_pattern_file" | tail -n 1)
+tailbuf=$(tail -n 1500 "$log")
+m=$(printf '%s\n' "$tailbuf" | grep -aoE "Build: completed,|Build did NOT complete successfully|Build: bazel build via target_pattern_file" | tail -n 1)
 case "$m" in
   *"did NOT complete"*) outcome=fail ;;
   *"Build: completed,"*) outcome=ok ;;
   *"via target_pattern_file"*) outcome=building ;;
   *) outcome=idle ;;
 esac
+# Sticky success: the daemon serves many independent build requests, so a single
+# trailing per-package failure (e.g. a flaky mock-codegen target) does not mean the
+# LSP is dead. If a "Build: completed," occurred since the most recent daemon (re)start,
+# downgrade fail -> partial: gopls still has data for everything that loaded, only the
+# failing packages are degraded. Reserve "fail" for a live daemon that has served NO
+# successful load since it started. The 1500-line tailbuf can't be trusted for this: a
+# noisy failure can push both the restart and the success marker out of that window even
+# though the daemon never restarted, so anchor on the actual last-restart line in the
+# full log instead.
+if [ "$outcome" = fail ]; then
+  start_line=$(grep -naE "Daemon started successfully" "$log" | tail -n 1 | cut -d: -f1)
+  if [ -n "$start_line" ]; then
+    served=$(tail -n +"$start_line" "$log" | grep -acE "Build: completed,")
+  else
+    served=$(printf '%s\n' "$tailbuf" | grep -acE "Build: completed,")
+  fi
+  [ "$served" -gt 0 ] 2>/dev/null && outcome=partial
+fi
 [ "$alive" = no ] && outcome=off
 echo "$outcome"
 printf '%s\n' "$log"
@@ -85,11 +106,16 @@ function M.refresh()
 			local prev = M.state
 			M.state = new_state
 			M.log_path = log_path
-			-- Only nudge when a live, working daemon flips into failure — never on first
+			-- Only nudge when a live daemon flips into a true wedge (fail) from a working
+			-- state — never for partial (some packages degraded but still serving), on first
 			-- poll (prev "unknown"), on reload, or while the daemon is down. Prevents spam.
-			if M.opts.notify_on_fail and new_state == "fail" and (prev == "ok" or prev == "building") then
+			if
+				M.opts.notify_on_fail
+				and new_state == "fail"
+				and (prev == "ok" or prev == "building" or prev == "partial")
+			then
 				vim.notify(
-					"gpd build failed — Go LSP data may be stale.\nRun :GpdStatus for the daemon-bounce command.",
+					"gpd is wedged — no successful load since the daemon started; Go LSP data is stale.\nRun :GpdStatus for the daemon-bounce command.",
 					vim.log.levels.WARN,
 					{ title = "gopackagesdriver" }
 				)
@@ -101,13 +127,14 @@ end
 
 local LABELS = {
 	fail = "✗ gpd",
+	partial = "▲ gpd",
 	building = "● gpd",
 	ok = "✓ gpd",
 	off = "○ gpd",
 }
 
 function M.text()
-	-- LABELS covers fail/building/ok/off; none/idle/unknown fall through to "" (hidden).
+	-- LABELS covers fail/partial/building/ok/off; none/idle/unknown fall through to "" (hidden).
 	return LABELS[M.state] or ""
 end
 
@@ -115,6 +142,8 @@ function M.color()
 	local s = M.state
 	if s == "fail" then
 		return { fg = "#f38ba8", gui = "bold" } -- red
+	elseif s == "partial" then
+		return { fg = "#fab387" } -- peach: serving, but some packages degraded
 	elseif s == "building" then
 		return { fg = "#f9e2af" } -- yellow
 	elseif s == "ok" or s == "off" then
@@ -168,6 +197,21 @@ function M.show_details()
 		if #tail > 0 then
 			table.insert(lines, "--- recent ---")
 			vim.list_extend(lines, tail)
+		end
+		-- When degraded, name the packages whose build failed — those are exactly the
+		-- ones where gopls is stale. Pulled from the BUILD.bazel paths in the error lines.
+		if M.state == "partial" or M.state == "fail" then
+			local pkgs = vim.fn.systemlist({
+				"sh",
+				"-c",
+				'tail -n 1500 "$1" | grep -aE "was not created|Action .* failed" | grep -aoE "/[^ ]+/BUILD\\.bazel" | sed "s#/BUILD\\.bazel##" | sort -u | tail -n 12',
+				"sh",
+				M.log_path,
+			})
+			if #pkgs > 0 then
+				table.insert(lines, "--- degraded packages (gopls stale here) ---")
+				vim.list_extend(lines, pkgs)
+			end
 		end
 	end
 	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO, { title = "gopackagesdriver" })
