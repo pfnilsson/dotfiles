@@ -78,6 +78,12 @@ require("snacks").setup({
 			},
 			gh_issue = {},
 			gh_pr = {},
+			-- Override snacks's hardcoded `-uall`: collapse untracked dirs so
+			-- `git status` uses the fsmonitor/untracked-cache fast path. ~5s -> ~0.5s
+			-- in large monorepos. Last `-u` flag wins; this is appended after `-uall`.
+			git_status = {
+				cmd_args = { "--untracked-files=normal" },
+			},
 		},
 	},
 })
