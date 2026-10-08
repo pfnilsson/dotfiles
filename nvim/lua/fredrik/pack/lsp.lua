@@ -3,9 +3,6 @@ require("lazydev").setup({
 	library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } },
 })
 
--- LSP file operations
-require("lsp-file-operations").setup()
-
 -- Mason
 local registry = require("fredrik.lsp.registry")
 
