@@ -1,3 +1,7 @@
+-- git root -> whether `nvim.largeRepo` is set. Cached for the session, so
+-- restart nvim after changing it.
+local large_repo = {}
+
 require("snacks").setup({
 	input = { enable = true },
 	gh = {},
@@ -81,8 +85,23 @@ require("snacks").setup({
 			-- Override snacks's hardcoded `-uall`: collapse untracked dirs so
 			-- `git status` uses the fsmonitor/untracked-cache fast path. ~5s -> ~0.5s
 			-- in large monorepos. Last `-u` flag wins; this is appended after `-uall`.
+			-- Opt a repo in with `git config nvim.largeRepo true`.
 			git_status = {
-				cmd_args = { "--untracked-files=normal" },
+				config = function(opts)
+					local cwd = opts.cwd or vim.fn.getcwd(0)
+					local root = Snacks.git.get_root(cwd) or cwd
+					if large_repo[root] == nil then
+						local out = vim.system(
+							{ "git", "-C", root, "config", "--type=bool", "nvim.largeRepo" },
+							{ text = true }
+						)
+							:wait()
+						large_repo[root] = vim.trim(out.stdout or "") == "true"
+					end
+					if large_repo[root] then
+						opts.cmd_args = { "--untracked-files=normal" }
+					end
+				end,
 			},
 		},
 	},
