@@ -4,6 +4,7 @@ M.servers = {
 	"lua_ls",
 	"ty",
 	"gopls",
+	"templ",
 	"html",
 	"jsonls",
 	"rust_analyzer",

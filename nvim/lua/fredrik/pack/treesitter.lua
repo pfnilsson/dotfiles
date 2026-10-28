@@ -5,6 +5,7 @@ ts.install({
 	"rust",
 	"python",
 	"go",
+	"templ",
 	"markdown",
 	"markdown_inline",
 	"json",
