@@ -26,6 +26,9 @@ local FT_MAP = {
 	gomod = { name = { "go.mod", "go.sum", "go.work" } },
 	gowork = { name = { "go.work" } },
 
+	-- templ (templ), which hands the templates' Go to gopls, so Go changes count too
+	templ = { ext = { "templ", "go" }, name = { "go.mod", "go.sum", "go.work" } },
+
 	-- Lua (lua_ls)
 	lua = { ext = { "lua" }, name = { ".luarc.json", ".luarc.jsonc" } },
 
